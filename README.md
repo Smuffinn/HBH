@@ -1,5 +1,5 @@
 # IM2
--PROJECT : HARBOR MANAGEMENT SYSTEM
+-PROJECT : HARBOR MANAGEMENT SYSTEM<br/>
 -Group Members: Selma, John Edward L., Sapio, Gwyn M., Tabungar, Steven Jan M
 
 <a href="https://docs.google.com/spreadsheets/d/1osmFreJpuNJsqo1y8SJziIvYiVPNEUqMjrD1SCjQWvg/edit?gid=0#gid=0">GANTT CHART</a><br/>
