@@ -13,32 +13,44 @@
         }
 
         header {
-            background-color: #ff6600; /* Orange header */
-            color: white;
-            padding: 10px 20px;
+            background-color: #fff;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        header .logo h1 {
-            margin: 0;
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff9900;
         }
 
-        nav ul {
-            list-style-type: none;
-            padding: 0;
+        .logo span {
+            color: #000;
         }
 
-        nav ul li {
-            display: inline;
-            margin-right: 20px;
-        }
-
-        nav ul li a {
-            color: white;
+        nav a {
+            margin: 0 15px;
             text-decoration: none;
+            color: #000;
         }
 
-        nav ul li a:hover {
-            text-decoration: underline;
+        .login-btn {
+            padding: 8px 16px;
+            background-color: transparent;
+            border: 1px solid #000;
+            border-radius: 4px;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-btn:hover {
+            background-color: #ff9900;
+            color: #fff;
+            border-color: #ff9900;
         }
 
         main {
@@ -128,17 +140,15 @@
 </head>
 <body>
     <header>
-        <div class="logo">
-            <h1>Harborhop</h1>
-        </div>
+        <div class="logo">HARBOR<span>hop</span></div>
         <nav>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'checkout' %}">Transaction</a></li>
-                <li><a href="#">Contact Us</a></li>
-                <li><a href="{% url 'about' %}">About Us</a></li>
-                <li><a href="#">User</a></li>
-            </ul>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'checkout' %}">Transaction</a>
+            <a href="#">Latest Offers</a>
+            <a href="{% url 'about' %}">About Us</a>
+            <a href="#">ID | EN</a>
+            <a href="#">User</a>
+            <a href="{% url 'logout' %}" class="login-btn">Log out</a>
         </nav>
     </header>
 

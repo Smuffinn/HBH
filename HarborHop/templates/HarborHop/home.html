@@ -344,12 +344,13 @@
     <header>
         <div class="logo">HARBOR<span>hop</span></div>
         <nav>
-            <a href="#">Home</a>
-            <a href="#">Transaction</a>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'checkout' %}">Transaction</a>
             <a href="#">Latest Offers</a>
-            <a href="#">Contact Us</a>
+            <a href="{% url 'about' %}">About Us</a>
             <a href="#">ID | EN</a>
-            <a href="{% url 'login' %}" class="login-btn">Log out</a>
+            <a href="#">User</a>
+            <a href="{% url 'logout' %}" class="login-btn">Log out</a>
         </nav>
     </header>
 

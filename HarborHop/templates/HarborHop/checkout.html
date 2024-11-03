@@ -21,28 +21,44 @@
 
         /* Header styles */
         header {
-            background-color: orange;
-            color: white;
-            padding: 15px 20px;
+            background-color: #fff;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        header .logo {
+        .logo {
+            font-size: 24px;
             font-weight: bold;
-            font-size: 1.5em;
+            color: #ff9900;
+        }
+
+        .logo span {
+            color: #000;
         }
 
         nav a {
-            color: white;
+            margin: 0 15px;
             text-decoration: none;
-            margin-left: 15px;
+            color: #000;
+        }
+
+        .login-btn {
+            padding: 8px 16px;
+            background-color: transparent;
+            border: 1px solid #000;
+            border-radius: 4px;
+            color: #000;
+            text-decoration: none;
             font-weight: bold;
         }
 
-        nav a:hover {
-            text-decoration: underline;
+        .login-btn:hover {
+            background-color: #ff9900;
+            color: #fff;
+            border-color: #ff9900;
         }
 
         /* Main content styles */
@@ -82,31 +98,28 @@
 </head>
 <body>
     <header>
-        <div class="logo">Harborhop</div>
+        <div class="logo">HARBOR<span>hop</span></div>
         <nav>
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'checkout' %}">Transaction</a>
-            <a href="#">Contact us</a>
+            <a href="#">Latest Offers</a>
             <a href="{% url 'about' %}">About Us</a>
+            <a href="#">ID | EN</a>
             <a href="#">User</a>
+            <a href="{% url 'logout' %}" class="login-btn">Log out</a>
         </nav>
     </header>
     <h1>Checkout</h1>
     <ul>
-        {% for passenger in passengers %}
+        {# {% for passenger in passengers %} #}
             <li>
                 <strong>Name:</strong> {{ passenger.name }} <br>
                 <strong>Email:</strong> {{ passenger.email }} <br>
-                <strong>Class:</strong> {{ passenger.class }} <br>
-                <strong>Price:</strong> 
-                {% if passenger.class == "economy" %}
-                    $100
-                {% else %}
-                    $200
-                {% endif %}
+                <strong>Class:</strong> {{ passenger.class_type }} <br>
+                <strong>Price:</strong> ${{ passenger.price }}
             </li>
             <hr>
-        {% endfor %}
+        {#{% endfor %}#}
     </ul>
     <a href="{% url 'add_passenger' %}" class="back">Add Another Passenger</a>
 </body>
