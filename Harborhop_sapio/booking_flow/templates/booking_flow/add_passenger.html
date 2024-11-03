@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Passenger</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: #ff6600; /* Orange header */
+            color: white;
+            padding: 10px 20px;
+        }
+
+        header .logo h1 {
+            margin: 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .passenger-info {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .additional-passenger {
+            background: #f1f1f1; /* Light gray for additional passengers */
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .passenger-info label,
+        .additional-passenger label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .passenger-info input[type="text"],
+        .passenger-info input[type="email"],
+        .passenger-info input[type="date"],
+        .passenger-info select,
+        .additional-passenger input[type="text"],
+        .additional-passenger input[type="email"],
+        .additional-passenger input[type="date"],
+        .additional-passenger select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .passenger-info input[type="radio"],
+        .additional-passenger input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .gender-container {
+            display: flex;
+            align-items: center; /* Align items vertically centered */
+        }
+
+        .gender-oneline {
+            margin-right: 10px; /* Space between options */
+        }
+
+        footer {
+            background-color: #ff6600; /* Match header color */
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        button {
+            background-color: #ff6600; /* Orange button */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #e65c00; /* Darker orange on hover */
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Harborhop</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'checkout' %}">Transaction</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="#">User</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Passenger Information</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="passenger-info">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <div class="gender-container">
+                    <label>Gender:</label>
+                    <label class="gender-oneline"><input type="radio" name="gender" value="Male" required> Male</label>
+                    <label class="gender-oneline"><input type="radio" name="gender" value="Female"> Female</label>
+                    <label class="gender-oneline"><input type="radio" name="gender" value="Other"> Other</label>
+                </div>
+                
+                </br>
+
+                <label for="date_of_birth">Date of Birth:</label>
+                <input type="date" id="date_of_birth" name="date_of_birth" required>
+
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phone_number">Phone Number:</label>
+                <input type="text" id="phone_number" name="phone_number" required>
+
+                <label for="class_type">Class:</label>
+                <select id="class_type" name="class_type" required>
+                    <option value="economy">Economy</option>
+                    <option value="first">First Class</option>
+                </select>
+                
+                <p>Price: <span id="price">Economy: $100, First Class: $200</span></p>
+            </div>
+
+            <label for="num_additional_passengers">Number of Additional Passengers:</label>
+            <input type="number" id="num_additional_passengers" name="num_additional_passengers" min="0" value="0" required>
+            <button type="submit">Next</button>
+            
+            <form method="POST" action="{% url 'checkout' %}">
+                {% csrf_token %}
+                <button type="submit">Book</button>
+            </form>
+
+        </form>
+
+        {% if additional_passengers_range %}
+            <form method="POST">
+                {% csrf_token %}
+                {% for i in additional_passengers_range %}
+                <div class="additional-passenger">
+                    <h3>Additional Passenger {{ forloop.counter }}</h3>
+                    <label for="additional_name_{{ i }}">Name:</label>
+                    <input type="text" id="additional_name_{{ i }}" name="additional_name_{{ i }}" required>
+
+                    <div class="gender-container">
+                    <label>Gender:</label>
+                    <label class="gender-oneline"><input type="radio" name="additional_gender_{{ i }}" value="Male"> Male</label>
+                    <label class="gender-oneline"><input type="radio" name="additional_gender_{{ i }}" value="Female"> Female</label>
+                    <label class="gender-oneline"><input type="radio" name="additional_gender_{{ i }}" value="Other"> Other</label>
+                    </div>
+
+                    <label for="additional_date_of_birth_{{ i }}">Date of Birth:</label>
+                    <input type="date" id="additional_date_of_birth_{{ i }}" name="additional_date_of_birth_{{ i }}" required>
+
+                    <label for="additional_address_{{ i }}">Address:</label>
+                    <input type="text" id="additional_address_{{ i }}" name="additional_address_{{ i }}" required>
+
+                    <label for="additional_email_{{ i }}">Email:</label>
+                    <input type="email" id="additional_email_{{ i }}" name="additional_email_{{ i }}" required>
+
+                    <label for="additional_phone_{{ i }}">Phone Number:</label>
+                    <input type="text" id="additional_phone_{{ i }}" name="additional_phone_{{ i }}" required>
+
+                    <label for="additional_class_type_{{ i }}">Class:</label>
+                    <select id="additional_class_type_{{ i }}" name="additional_class_type_{{ i }}" required>
+                        <option value="economy">Economy</option>
+                        <option value="first">First Class</option>
+                    </select>
+                </div>
+                {% endfor %}
+            </form> <!-- Close the additional passengers form -->
+        {% endif %}
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Harborhop. All rights reserved.</p>
+    </footer>
+</body>
+</html>
