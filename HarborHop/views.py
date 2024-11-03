@@ -1,9 +1,8 @@
-
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from .forms import UserRegistrationForm
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     return render(request, 'HarborHop/home.html')
@@ -21,15 +20,22 @@ def register(request):
     return render(request, 'HarborHop/register.html', {'form': form})
 
 def user_login(request):
-    if request.method == "POST":
-        username = request.POST['username']
+    if request.method == 'POST':
+        email = request.POST['email']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
             return redirect('home')
-    return render(request, 'HarborHop/login.html')
+        else:
+            return render(request, 'HarborHop/login.html', {'error': 'Invalid login credentials'})
+    else:
+        return render(request, 'HarborHop/login.html')
 
 def user_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('home')
+
+@login_required
+def main_home(request):
+    return render(request, 'HarborHop/main_home.html')
