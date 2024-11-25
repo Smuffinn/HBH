@@ -81,12 +81,9 @@ We welcome contributions to the Harbor Management System. To contribute, please 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Group Members
-- Selma
-- John Edward L.
-- Sapio
-- Gwyn M.
-- Tabungar
-- Steven Jan M.
+- Selma, John Edward L.
+- Sapio, Gwyn M.
+- Tabungar, Steven Jan M.
 
 ## Project Links
 - [Gantt Chart](https://docs.google.com/spreadsheets/d/1osmFreJpuNJsqo1y8SJziIvYiVPNEUqMjrD1SCjQWvg/edit?gid=0#gid=0)
