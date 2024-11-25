@@ -12,6 +12,8 @@ Harbor Management System is a comprehensive solution designed to streamline the 
 - [Usage](#usage)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
+- [Code of Conduct](#code-of-conduct)
+- [Security](#security)
 - [License](#license)
 - [Group Members](#group-members)
 - [Project Links](#project-links)
@@ -51,13 +53,13 @@ To use the Harbor Management System, open your web browser and navigate to `http
 
 ## Screenshots
 ### Home Page
-![Home Page](https://www.shutterstock.com/image-vector/white-cruise-ship-blue-ocean-600nw-2312579323.jpg)
+![Home Page](images/home_page.jpg)
 
 ### Booking Page
-![Booking Page](https://assets.princess.com/is/image/princesscruises/oceannow-crew-delivers-cocktails-couple-lounging-lido-deck-wearing-medallion:5x4?ts=1721071273083)
+![Booking Page](images/booking_page.jpg)
 
 ### Checkout Page
-![Checkout Page](https://media.licdn.com/dms/image/v2/C4D1BAQFWtDwvyWttvg/company-background_10000/company-background_10000/0/1605151800225/best_price_cruises_cover?e=2147483647&v=beta&t=0Q-f57ZiNmjw-FZvjDUz0EamF6K6ihURFDPotNeLH9g)
+![Checkout Page](images/checkout_page.jpg)
 
 ## Contributing
 We welcome contributions to the Harbor Management System. To contribute, please follow these steps:
@@ -76,6 +78,12 @@ We welcome contributions to the Harbor Management System. To contribute, please 
     git push origin feature/your-feature-name
     ```
 5. Open a pull request.
+
+## Code of Conduct
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) for details on our community standards.
+
+## Security
+If you discover any security vulnerabilities, please read our [Security Policy](SECURITY.md) for instructions on how to report them.
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
