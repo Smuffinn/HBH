@@ -1,5 +1,7 @@
 # Harbor Management System
 
+![HarborHop Logo](https://www.shutterstock.com/image-vector/white-cruise-ship-blue-ocean-600nw-2312579323.jpg)
+
 ## Overview
 Harbor Management System is a comprehensive solution designed to streamline the management of harbor operations. This project is developed as part of the IM2 course.
 
@@ -8,6 +10,7 @@ Harbor Management System is a comprehensive solution designed to streamline the 
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Screenshots](#screenshots)
 - [Contributing](#contributing)
 - [License](#license)
 - [Group Members](#group-members)
@@ -46,6 +49,16 @@ To get started with the Harbor Management System, follow these steps:
 ## Usage
 To use the Harbor Management System, open your web browser and navigate to `http://127.0.0.1:8000/`. From there, you can register, log in, and start managing harbor operations.
 
+## Screenshots
+### Home Page
+![Home Page](https://www.shutterstock.com/image-vector/white-cruise-ship-blue-ocean-600nw-2312579323.jpg)
+
+### Booking Page
+![Booking Page](https://assets.princess.com/is/image/princesscruises/oceannow-crew-delivers-cocktails-couple-lounging-lido-deck-wearing-medallion:5x4?ts=1721071273083)
+
+### Checkout Page
+![Checkout Page](https://media.licdn.com/dms/image/v2/C4D1BAQFWtDwvyWttvg/company-background_10000/company-background_10000/0/1605151800225/best_price_cruises_cover?e=2147483647&v=beta&t=0Q-f57ZiNmjw-FZvjDUz0EamF6K6ihURFDPotNeLH9g)
+
 ## Contributing
 We welcome contributions to the Harbor Management System. To contribute, please follow these steps:
 
@@ -68,9 +81,12 @@ We welcome contributions to the Harbor Management System. To contribute, please 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Group Members
-- Selma, John Edward L.
-- Sapio, Gwyn M.
-- Tabungar, Steven Jan M.
+- Selma
+- John Edward L.
+- Sapio
+- Gwyn M.
+- Tabungar
+- Steven Jan M.
 
 ## Project Links
 - [Gantt Chart](https://docs.google.com/spreadsheets/d/1osmFreJpuNJsqo1y8SJziIvYiVPNEUqMjrD1SCjQWvg/edit?gid=0#gid=0)
