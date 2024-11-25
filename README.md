@@ -1,9 +1,78 @@
-# IM2
--PROJECT : HARBOR MANAGEMENT SYSTEM<br/>
--Group Members: Selma, John Edward L., Sapio, Gwyn M., Tabungar, Steven Jan M
+# Harbor Management System
 
+## Overview
+Harbor Management System is a comprehensive solution designed to streamline the management of harbor operations. This project is developed as part of the IM2 course.
 
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Group Members](#group-members)
+- [Project Links](#project-links)
 
-<a href="https://docs.google.com/spreadsheets/d/1osmFreJpuNJsqo1y8SJziIvYiVPNEUqMjrD1SCjQWvg/edit?gid=0#gid=0">GANTT CHART</a><br/>
-<a href="https://www.figma.com/design/fEaKTxQBTnwbtAtaRXNcGy/Untitled?node-id=6-282&t=yUtDM0fuRE0mOHqU-1">HARBOR HOP FIGMA</a><br/>
-<a href="https://online.visual-paradigm.com/share.jsp?id=333630353838332d31#diagram:workspace=odcapejy&proj=0&id=1">ERD</a>
+## Features
+- Easy boat ticket booking
+- Real-time availability and pricing
+- Secure payment options
+- Dedicated customer support
+
+## Installation
+To get started with the Harbor Management System, follow these steps:
+
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/yourusername/harbor-management-system.git
+    ```
+2. Navigate to the project directory:
+    ```sh
+    cd harbor-management-system
+    ```
+3. Install the dependencies:
+    ```sh
+    pip install -r requirements.txt
+    ```
+4. Apply migrations:
+    ```sh
+    python manage.py migrate
+    ```
+5. Run the development server:
+    ```sh
+    python manage.py runserver
+    ```
+
+## Usage
+To use the Harbor Management System, open your web browser and navigate to `http://127.0.0.1:8000/`. From there, you can register, log in, and start managing harbor operations.
+
+## Contributing
+We welcome contributions to the Harbor Management System. To contribute, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch:
+    ```sh
+    git checkout -b feature/your-feature-name
+    ```
+3. Make your changes and commit them:
+    ```sh
+    git commit -m "Add your commit message"
+    ```
+4. Push to the branch:
+    ```sh
+    git push origin feature/your-feature-name
+    ```
+5. Open a pull request.
+
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## Group Members
+- Selma, John Edward L.
+- Sapio, Gwyn M.
+- Tabungar, Steven Jan M.
+
+## Project Links
+- [Gantt Chart](https://docs.google.com/spreadsheets/d/1osmFreJpuNJsqo1y8SJziIvYiVPNEUqMjrD1SCjQWvg/edit?gid=0#gid=0)
+- [Harbor Hop Figma](https://www.figma.com/design/fEaKTxQBTnwbtAtaRXNcGy/Untitled?node-id=6-282&t=yUtDM0fuRE0mOHqU-1)
+- [ERD](https://online.visual-paradigm.com/share.jsp?id=333630353838332d31#diagram:workspace=odcapejy&proj=0&id=1)
