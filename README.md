@@ -83,7 +83,7 @@ We welcome contributions to the Harbor Management System. To contribute, please 
 Please read our [Code of Conduct](CODE_OF_CONDUCT.md) for details on our community standards.
 
 ## Security
-If you discover any security vulnerabilities, please read our [Security Policy](SECURITY.md) for instructions on how to report them.
+If you discover any security vulnerabilities, please read our [Security Policy](SECURITY.MD) for instructions on how to report them.
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
