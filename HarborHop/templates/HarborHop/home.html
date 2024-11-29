@@ -2,91 +2,258 @@
 {% load static %}
 
 {% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f4f4f9;
+    }
 
- 
+    main {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        background: white;
+        max-width: 800px;
+        margin: 20px auto;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-    <!-- Latest Offers Section -->
-    <section class="latest-offers-section">
-        <h2>Latest Offers</h2>
-        <div class="offers-container">
-            <div class="offer-card">
-                <img src="https://assets-eu-01.kc-usercontent.com/aa24ba70-9a12-01ae-259b-7ef588a0b2ef/9f1cd480-747a-4b91-8ba2-cbd89d98ed3b/a-high-speed-rib-transfer-to-collanmore-island.jpg?w=1332&q=66&h=750&fit=crop&fm=jpg" alt="Offer 1">
-                <div class="offer-card-content">
-                    <span class="tag">Special Offer</span>
-                    <h3>Island Adventure</h3>
-                </div>
+    h2 {
+        color: #ff9900;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        color: #333;
+        margin-top: 20px;
+    }
+
+    p {
+        color: #555;
+        line-height: 1.6;
+    }
+
+    ul {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+    ul li {
+        margin-bottom: 10px;
+        color: #555;
+    }
+
+    .btn-book-now {
+        display: block;
+        margin: 20px auto;
+        padding: 15px 30px;
+        background-color: #ff9900;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-book-now:hover {
+        background-color: #e68a00;
+    }
+
+    .btn-learn-more {
+        display: block;
+        margin: 20px auto;
+        padding: 15px 30px;
+        background-color: transparent;
+        color: #ff9900;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        border: 2px solid #ff9900;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-learn-more:hover {
+        background-color: #ff9900;
+        color: white;
+    }
+
+    .offers-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+    }
+
+    .offer-card {
+        flex: 0 1 300px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background: white;
+    }
+
+    .offer-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .offer-card-content {
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .tag {
+        display: inline-block;
+        background-color: #ff9900;
+        color: white;
+        font-size: 12px;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+        border-radius: 3px;
+    }
+
+    .tag.limited {
+        background-color: #ffcc00; /* Yellow for "Limited Time" */
+        color: black; /* Black text for better readability */
+    }
+
+    .view-all-btn {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+    .view-all-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .features-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+    }
+
+    .feature-card {
+        flex: 0 1 300px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background: white;
+    }
+
+    .feature-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .feature-card p {
+        padding: 15px;
+        margin: 0;
+        text-align: center;
+    }
+
+    .why-use-section h2 {
+        color: #000000;
+    }
+</style>
+
+<main>
+    <h2>About HarborHop</h2>
+    <p>Welcome to HarborHop, your ultimate destination for seamless online boat ticket booking! 
+        Embark on a journey with us to explore stunning water destinations with ease and comfort. 
+        Whether you're seeking a tranquil escape or an adventurous expedition, 
+        HarborHop offers the best deals and unparalleled convenience. 
+        Experience the beauty of the seas like never before with our user-friendly platform and exceptional customer service. 
+        Join us today and make your dream voyage a reality!</p>
+    <a href="{% url 'booking_create' %}" class="btn-learn-more">BOOK NOW!!!</a>
+    <a href="{% url 'about' %}" class="btn-learn-more">LEARN MORE ABOUT US</a>
+</main>
+
+<!-- Latest Offers Section -->
+<section class="latest-offers-section">
+    <h2>Latest Offers</h2>
+    <div class="offers-container">
+        <div class="offer-card">
+            <img src="https://assets-eu-01.kc-usercontent.com/aa24ba70-9a12-01ae-259b-7ef588a0b2ef/9f1cd480-747a-4b91-8ba2-cbd89d98ed3b/a-high-speed-rib-transfer-to-collanmore-island.jpg" alt="Island Adventure">
+            <div class="offer-card-content">
+                <span class="tag limited">Special Offer</span>
+                <h3>Island Adventure</h3>
             </div>
-            <div class="offer-card">
-                <img src="https://www.greenmountainclub.org/wp-content/uploads/2021/08/Mount-Mansfield_Sunset_Laura-Greenwood-1100px.jpg" alt="Offer 2">
-                <div class="offer-card-content">
-                    <span class="tag">Limited Time</span>
-                    <h3>Mountain Hike</h3>
-                </div>
-            </div>
-            <div class="offer-card">
-                <img src="https://assets-eu-01.kc-usercontent.com/aa24ba70-9a12-01ae-259b-7ef588a0b2ef/9f1cd480-747a-4b91-8ba2-cbd89d98ed3b/a-high-speed-rib-transfer-to-collanmore-island.jpg?w=1332&q=66&h=750&fit=crop&fm=jpg" alt="Offer 1">
-                <div class="offer-card-content">
-                    <span class="tag">Special Offer</span>
-                    <h3>Island Adventure</h3>
-                </div>
-            </div>
-            <div class="offer-card">
-                <img src="https://www.greenmountainclub.org/wp-content/uploads/2021/08/Mount-Mansfield_Sunset_Laura-Greenwood-1100px.jpg" alt="Offer 2">
-                <div class="offer-card-content">
-                    <span class="tag">Limited Time</span>
-                    <h3>Mountain Hike</h3>
-                </div>
-            </div>
-            <div class="offer-card">
-                <img src="https://assets-eu-01.kc-usercontent.com/aa24ba70-9a12-01ae-259b-7ef588a0b2ef/9f1cd480-747a-4b91-8ba2-cbd89d98ed3b/a-high-speed-rib-transfer-to-collanmore-island.jpg?w=1332&q=66&h=750&fit=crop&fm=jpg" alt="Offer 1">
-                <div class="offer-card-content">
-                    <span class="tag">Special Offer</span>
-                    <h3>Island Adventure</h3>
-                </div>
-            </div>
-            <div class="offer-card">
-                <img src="https://www.greenmountainclub.org/wp-content/uploads/2021/08/Mount-Mansfield_Sunset_Laura-Greenwood-1100px.jpg" alt="Offer 2">
-                <div class="offer-card-content">
-                    <span class="tag">Limited Time</span>
-                    <h3>Mountain Hike</h3>
-                </div>
-            </div>
-            <!-- Add more offers here -->
         </div>
-        <a href="#" class="view-all-btn">View All Offers</a>
-    </section>
-
-    <!-- Why Use HarborHop Section -->
-    <section class="why-use-section">
-        <h2>Why Use HarborHop?</h2>
-        <div class="features-container">
-            <div class="feature-card">
-                <img src="https://media.licdn.com/dms/image/v2/C4D1BAQFWtDwvyWttvg/company-background_10000/company-background_10000/0/1605151800225/best_price_cruises_cover?e=2147483647&v=beta&t=0Q-f57ZiNmjw-FZvjDUz0EamF6K6ihURFDPotNeLH9g" alt="Feature 1" style="width: 100px; height: 100px;">
-                <p>Best Prices Guaranteed</p>
-            </div>
-            <div class="feature-card">
-                <img src="https://assets.princess.com/is/image/princesscruises/oceannow-crew-delivers-cocktails-couple-lounging-lido-deck-wearing-medallion:5x4?ts=1721071273083" alt="Feature 2" style="width: 100px; height: 100px;">
-                <p>24/7 Customer Support</p>
-            </div>
-            <div class="feature-card">
-                <img src="https://media.licdn.com/dms/image/v2/C4D1BAQFWtDwvyWttvg/company-background_10000/company-background_10000/0/1605151800225/best_price_cruises_cover?e=2147483647&v=beta&t=0Q-f57ZiNmjw-FZvjDUz0EamF6K6ihURFDPotNeLH9g" alt="Feature 1" style="width: 100px; height: 100px;">
-                <p>Best Prices Guaranteed</p>
-            </div>
-            <div class="feature-card">
-                <img src="https://assets.princess.com/is/image/princesscruises/oceannow-crew-delivers-cocktails-couple-lounging-lido-deck-wearing-medallion:5x4?ts=1721071273083" alt="Feature 2" style="width: 100px; height: 100px;">
-                <p>24/7 Customer Support</p>
-            </div>
-            <div class="feature-card">
-                <img src="https://media.licdn.com/dms/image/v2/C4D1BAQFWtDwvyWttvg/company-background_10000/company-background_10000/0/1605151800225/best_price_cruises_cover?e=2147483647&v=beta&t=0Q-f57ZiNmjw-FZvjDUz0EamF6K6ihURFDPotNeLH9g" alt="Feature 1" style="width: 100px; height: 100px;">
-                <p>Best Prices Guaranteed</p>
-            </div>
-            <div class="feature-card">
-                <img src="https://assets.princess.com/is/image/princesscruises/oceannow-crew-delivers-cocktails-couple-lounging-lido-deck-wearing-medallion:5x4?ts=1721071273083" alt="Feature 2" style="width: 100px; height: 100px;">
-                <p>24/7 Customer Supports</p>
+        <div class="offer-card">
+            <img src="https://www.greenmountainclub.org/wp-content/uploads/2021/08/Mount-Mansfield_Sunset_Laura-Greenwood-1100px.jpg" alt="Mountain Hike">
+            <div class="offer-card-content">
+                <span class="tag limited">Limited Time</span>
+                <h3>Mountain Hike</h3>
             </div>
         </div>
-    </section>
+        <div class="offer-card">
+            <img src="https://assets-eu-01.kc-usercontent.com/aa24ba70-9a12-01ae-259b-7ef588a0b2ef/9f1cd480-747a-4b91-8ba2-cbd89d98ed3b/a-high-speed-rib-transfer-to-collanmore-island.jpg" alt="Island Adventure">
+            <div class="offer-card-content">
+                <span class="tag limited">Special Offer</span>
+                <h3>Island Adventure</h3>
+            </div>
+        </div>
+        <div class="offer-card">
+            <img src="https://www.greenmountainclub.org/wp-content/uploads/2021/08/Mount-Mansfield_Sunset_Laura-Greenwood-1100px.jpg" alt="Mountain Hike">
+            <div class="offer-card-content">
+                <span class="tag limited">Limited Time</span>
+                <h3>Mountain Hike</h3>
+            </div>
+        </div>
+    </div>
+</section>
 
-
-
+<!-- Why Use HarborHop Section -->
+<section class="why-use-section">
+    <h2>Why Use HarborHop?</h2>
+    <div class="features-container">
+        <div class="feature-card">
+            <img src="https://media.licdn.com/dms/image/v2/C4D1BAQFWtDwvyWttvg/company-background_10000/company-background_10000/0/1605151800225/best_price_cruises_cover?e=2147483647&v=beta&t=0Q-f57ZiNmjw-FZvjDUz0EamF6K6ihURFDPotNeLH9g" alt="Best Prices">
+            <p>Best Prices Guaranteed</p>
+        </div>
+        <div class="feature-card">
+            <img src="https://assets.princess.com/is/image/princesscruises/oceannow-crew-delivers-cocktails-couple-lounging-lido-deck-wearing-medallion:5x4?ts=1721071273083" alt="24/7 Support">
+            <p>24/7 Customer Support</p>
+        </div>
+        <div class="feature-card">
+            <img src="https://media.licdn.com/dms/image/v2/C4D1BAQFWtDwvyWttvg/company-background_10000/company-background_10000/0/1605151800225/best_price_cruises_cover?e=2147483647&v=beta&t=0Q-f57ZiNmjw-FZvjDUz0EamF6K6ihURFDPotNeLH9g" alt="Best Prices">
+            <p>Best Prices Guaranteed</p>
+        </div>
+        <div class="feature-card">
+            <img src="https://assets.princess.com/is/image/princesscruises/oceannow-crew-delivers-cocktails-couple-lounging-lido-deck-wearing-medallion:5x4?ts=1721071273083" alt="24/7 Support">
+            <p>24/7 Customer Support</p>
+        </div>
+    </div>
+</section>
 {% endblock %}
