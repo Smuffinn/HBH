@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import register, user_login, user_logout, home, checkout, about
+from .views import register, user_login, user_logout, home, checkout, about, account 
 from .views import booking_create, booking_delete, booking_update, booking_list
 
 urlpatterns = [
@@ -11,7 +11,8 @@ urlpatterns = [
 
     path('checkout/', checkout, name='checkout'),
     path('about/', about, name='about'),
-    
+    path('account/', account, name='account'),
+
     path('booking/', booking_create, name='booking_create'),
     path('booking_list/', booking_list, name='booking_list'),
     path('update/<int:pk>/', booking_update, name='booking_update'),

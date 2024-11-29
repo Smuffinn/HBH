@@ -1,10 +1,7 @@
+{% extends 'HarborHop/header.html' %}
+{% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account Profile</title>
+{% block content %}
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,8 +32,8 @@
             line-height: 1.6;
         }
     </style>
-</head>
-<body>
+
+
     <div class="container">
         <div class="profile-header">
             <h1>My Account</h1>
@@ -46,11 +43,11 @@
             <p><strong>Name:</strong> John Doe</p>
             <p><strong>Email:</strong> john.doe@example.com</p>
             <p><strong>Username:</strong> johndoe</p>
-            <h2>Account Settings</h2>
+            {% comment %} <h2>Account Settings</h2>
             <p><a href="#">Change Password</a></p>
             <p><a href="#">Update Email</a></p>
-            <p><a href="#">Delete Account</a></p>
+            <p><a href="#">Delete Account</a></p> {% endcomment %}
         </div>
     </div>
-</body>
-</html>
+
+{% endblock %}

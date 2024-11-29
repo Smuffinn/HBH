@@ -76,8 +76,8 @@ def checkout(request):
 def about(request):
     return render(request, 'HarborHop/about.html')
 
-
-
+def account(request):
+    return render(request, 'HarborHop/account.html')
 
 @login_required
 def booking_list(request):
