@@ -1,10 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
-from .forms import UserRegistrationForm, PassengerForm
+from .forms import UserRegistrationForm
 from django.contrib.auth.decorators import login_required
-from .models import Passenger
-
+# from .models import Passenger
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Booking
+from .forms import BookingForm
 def home(request):
     return render(request, 'HarborHop/home.html')
 
@@ -15,86 +21,95 @@ def register(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
+            messages.success(request, 'You are now logged in')
             return redirect('login')
     else:
         form = UserRegistrationForm()
     return render(request, 'HarborHop/register.html', {'form': form})
 
 def user_login(request):
+    # if request.method == 'POST':
+    #     form = AuthenticationForm(request, data=request.POST)
+    #     if form.is_valid():
+    #         username = form.cleaned_data.get('username')
+    #         password = form.cleaned_data.get('password')
+    #         user = authenticate(request, username=username, password=password)
+    #     if user is not None:
+    #         login(request, user)
+    #         messages.success(request, 'You are now logged in')
+    #         return redirect('home')
+    #     else:
+    #         return render(request, 'HarborHop/login.html', {'error': 'Invalid login credentials'})
+    # else:
+    #     return render(request, 'HarborHop/login.html')
+    if request.user.is_authenticated:
+        return redirect('home') 
     if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-        user = authenticate(request, username=email, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, "You have successfully logged in!")
+                return redirect('home')  
+            else:
+                messages.error(request, "Invalid username or password.")
         else:
-            return render(request, 'HarborHop/login.html', {'error': 'Invalid login credentials'})
+            messages.error(request, "Invalid login details. Please try again.")
     else:
-        return render(request, 'HarborHop/login.html')
+        form = AuthenticationForm()
 
+    return render(request, 'HarborHop/login.html', {'form': form})
 def user_logout(request):
     logout(request)
     return redirect('home')
 
-@login_required
-def main_home(request):
-    return render(request, 'HarborHop/main_home.html')
 
-def add_passenger(request):
-    num_additional_passengers = 0
-    additional_passengers_range = []
 
-    if request.method == 'POST':
-        num_additional_passengers = int(request.POST.get('num_additional_passengers', 0))
-        form = PassengerForm(request.POST)
-        
-        if form.is_valid():
-            passenger = form.save(commit=False)
-            if passenger.class_type == 'economy':
-                passenger.price = 100.00
-            elif passenger.class_type == 'first':
-                passenger.price = 200.00
-            
-            passenger.save()
-
-            for i in range(num_additional_passengers):
-                additional_passenger = Passenger(
-                    name=request.POST.get(f'additional_name_{i + 1}'),
-                    gender=request.POST.get(f'additional_gender_{i + 1}'),
-                    date_of_birth=request.POST.get(f'additional_date_of_birth_{i + 1}'),
-                    address=request.POST.get(f'additional_address_{i + 1}'),
-                    email=request.POST.get(f'additional_email_{i + 1}'),
-                    phone_number=request.POST.get(f'additional_phone_{i + 1}'),
-                    class_type=request.POST.get(f'additional_class_type_{i + 1}'),
-                )
-                
-                if additional_passenger.class_type == 'economy':
-                    additional_passenger.price = 100.00
-                elif additional_passenger.class_type == 'first':
-                    additional_passenger.price = 200.00
-                
-                if not additional_passenger.name:
-                    continue
-
-                additional_passenger.save()
-
-            return redirect('checkout')
-
-    else:
-        form = PassengerForm()
-    
-    additional_passengers_range = range(1, num_additional_passengers + 1)
-
-    return render(request, 'HarborHop/add_passenger.html', {
-        'form': form,
-        'num_additional_passengers': num_additional_passengers,
-        'additional_passengers_range': additional_passengers_range
-    })
 
 def checkout(request):
-    passengers = Passenger.objects.all()
-    return render(request, 'HarborHop/checkout.html', {'passengers': passengers})
+    bookings = Booking.objects.all()
+    return render(request, 'HarborHop/checkout.html', {'bookings': bookings})
 
 def about(request):
     return render(request, 'HarborHop/about.html')
+
+
+
+
+@login_required
+def booking_list(request):
+    
+    bookings = Booking.objects.all()
+    return render(request, 'HarborHop/booking_list.html', {'bookings': bookings})
+
+@login_required
+def booking_create(request):
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('booking_list')
+    else:
+        form = BookingForm()
+    return render(request, 'HarborHop/booking_create.html', {'form': form})
+@login_required
+def booking_update(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    if request.method == 'POST':
+        form = BookingForm(request.POST, instance=booking)
+        if form.is_valid():
+            form.save()
+            return redirect('booking_list')
+    else:
+        form = BookingForm(instance=booking)
+    return render(request, 'HarborHop/booking_list.html', {'form': form})
+@login_required
+def booking_delete(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    if request.method == 'POST':
+        booking.delete()
+        return redirect('booking_list')
+    return render(request, 'HarborHop/booking_confirm_delete.html', {'booking': booking})

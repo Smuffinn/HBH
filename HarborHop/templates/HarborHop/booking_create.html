@@ -1,0 +1,42 @@
+{% extends 'HarborHop/header.html' %}
+{% load static %}
+
+{% block content %}
+
+    
+    <section class="search-section">
+        <div class="search-box">
+            <!-- <h2>Find Your Trip</h2>
+            <p>Set Your Arrival & Departure Destination & Travel Dates</p>
+            <input type="text" id="from" placeholder="From">
+            <input type="text" id="to" placeholder="To">
+            <input type="date" id="depart-date" placeholder="Depart Date">
+            <input type="date" id="return-date" placeholder="Return Date">
+            <div class="passenger-controls">
+                <div class="passenger-control">
+                    <label>Adults</label>
+                    <button onclick="updateCount('adult', -1)">-</button>
+                    <span id="adult-count">1</span>
+                    <button onclick="updateCount('adult', 1)">+</button>
+                </div>
+                <div class="passenger-control">
+                    <label>Children</label>
+                    <button onclick="updateCount('child', -1)">-</button>
+                    <span id="child-count">0</span>
+                    <button onclick="updateCount('child', 1)">+</button>
+                </div>
+            </div>
+            <div style="display: flex; gap: 2%;">
+                <button onclick="resetSearch()">Reset</button>
+                <button>Search</button>
+            </div> -->
+            <h1>Create Booking</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Save</button>
+            </form>
+            <a href="{% url 'booking_list' %}">Back to List</a>
+        </div>
+    </section>
+{% endblock %}

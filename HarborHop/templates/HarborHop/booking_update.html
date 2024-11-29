@@ -1,0 +1,17 @@
+{% extends 'HarborHop/header.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<h1>Update Booking</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+    <a href="{% url 'booking_list' %}">Back to List</a>
+
+
+    
+{% endblock %}

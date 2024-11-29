@@ -222,14 +222,14 @@
                 </div>
 
                 <!-- Form -->
-                <form action="{% url 'home' %}" method="post">
+                <!-- <form action="{% url 'home' %}" method="post">
                     {% csrf_token %}
                     <div class="input-container">
-                        <i class="input-icon">&#x1F464;</i> <!-- User Icon -->
+                        <i class="input-icon">&#x1F464;</i> 
                         <input type="email" name="email" placeholder="Email Address" required>
                     </div>
                     <div class="input-container">
-                        <i class="input-icon">&#x1F512;</i> <!-- Lock Icon -->
+                        <i class="input-icon">&#x1F512;</i> 
                         <input type="password" name="password" placeholder="Password" required>
                     </div>
 
@@ -238,13 +238,19 @@
                     </div>
 
                     <button type="submit" class="sign-in-btn">Log In</button>
-                </form>
+                </form> -->
 
-                <!-- Register Button -->
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Login</button>
+                </form>
                 <a href="{% url 'register' %}"><button class="register-btn">Register</button></a>
             </div>
         </div>
     </div>
 
+
+    
 </body>
 </html>

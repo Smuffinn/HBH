@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -340,115 +341,34 @@
     </style>
 </head>
 <body>
-    
+    <!-- Header -->
     <header>
         <div class="logo">HARBOR<span>hop</span></div>
         <nav>
-            <a href="#">Home</a>
-            <a href="#">Transaction</a>
-            <a href="#">Latest Offers</a>
-            <a href="#">Contact Us</a>
-            <a href="#">ID | EN</a>
-            <a href="{% url 'login' %}" class="login-btn">Log out</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'checkout' %}">Transaction</a>
+                <a href="{% url 'about' %}">About Us</a>
+                <a href = "{% url 'booking_create' %}">Booking</a>
+                <a href="#">User</a>
+                <a href="{% url 'logout' %}" class="login-btn">Log out</a>
+            {% else %}
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'checkout' %}">Transaction</a>
+                <a href="{% url 'about' %}">About Us</a>
+                <a href="{% url 'login' %}" class="login-btn">Login</a>
+                <a href="{% url 'register' %}" class="login-btn">Register</a>
+            {% endif %}
         </nav>
     </header>
 
+    <div class="container">
+        <br>
+        {% block content %}
+        {% endblock content %}
+    </div>
+
     
-    <section class="search-section">
-        <div class="search-box">
-            <h2>Find Your Trip</h2>
-            <p>Set Your Arrival & Departure Destination & Travel Dates</p>
-            <input type="text" id="from" placeholder="From">
-            <input type="text" id="to" placeholder="To">
-            <input type="date" id="depart-date" placeholder="Depart Date">
-            <input type="date" id="return-date" placeholder="Return Date">
-            <div class="passenger-controls">
-                <div class="passenger-control">
-                    <label>Adults</label>
-                    <button onclick="updateCount('adult', -1)">-</button>
-                    <span id="adult-count">1</span>
-                    <button onclick="updateCount('adult', 1)">+</button>
-                </div>
-                <div class="passenger-control">
-                    <label>Children</label>
-                    <button onclick="updateCount('child', -1)">-</button>
-                    <span id="child-count">0</span>
-                    <button onclick="updateCount('child', 1)">+</button>
-                </div>
-            </div>
-            <div style="display: flex; gap: 2%;">
-                <button onclick="resetSearch()">Reset</button>
-                <button>Search</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Latest Offers Section -->
-    <section class="latest-offers-section">
-        <h2>Latest Offers</h2>
-        <div class="offers-container">
-            <div class="offer-card">
-                <img src="https://assets-eu-01.kc-usercontent.com/aa24ba70-9a12-01ae-259b-7ef588a0b2ef/9f1cd480-747a-4b91-8ba2-cbd89d98ed3b/a-high-speed-rib-transfer-to-collanmore-island.jpg?w=1332&q=66&h=750&fit=crop&fm=jpg" alt="Offer 1">
-                <div class="offer-card-content">
-                    <span class="tag">Special Offer</span>
-                    <h3>Island Adventure</h3>
-                </div>
-            </div>
-            <div class="offer-card">
-                <img src="https://www.greenmountainclub.org/wp-content/uploads/2021/08/Mount-Mansfield_Sunset_Laura-Greenwood-1100px.jpg" alt="Offer 2">
-                <div class="offer-card-content">
-                    <span class="tag">Limited Time</span>
-                    <h3>Mountain Hike</h3>
-                </div>
-            </div>
-            <div class="offer-card">
-                <img src="https://assets-eu-01.kc-usercontent.com/aa24ba70-9a12-01ae-259b-7ef588a0b2ef/9f1cd480-747a-4b91-8ba2-cbd89d98ed3b/a-high-speed-rib-transfer-to-collanmore-island.jpg?w=1332&q=66&h=750&fit=crop&fm=jpg" alt="Offer 1">
-                <div class="offer-card-content">
-                    <span class="tag">Special Offer</span>
-                    <h3>Island Adventure</h3>
-                </div>
-            </div>
-            <div class="offer-card">
-                <img src="https://www.greenmountainclub.org/wp-content/uploads/2021/08/Mount-Mansfield_Sunset_Laura-Greenwood-1100px.jpg" alt="Offer 2">
-                <div class="offer-card-content">
-                    <span class="tag">Limited Time</span>
-                    <h3>Mountain Hike</h3>
-                </div>
-            </div>
-            <div class="offer-card">
-                <img src="https://assets-eu-01.kc-usercontent.com/aa24ba70-9a12-01ae-259b-7ef588a0b2ef/9f1cd480-747a-4b91-8ba2-cbd89d98ed3b/a-high-speed-rib-transfer-to-collanmore-island.jpg?w=1332&q=66&h=750&fit=crop&fm=jpg" alt="Offer 1">
-                <div class="offer-card-content">
-                    <span class="tag">Special Offer</span>
-                    <h3>Island Adventure</h3>
-                </div>
-            </div>
-            <div class="offer-card">
-                <img src="https://www.greenmountainclub.org/wp-content/uploads/2021/08/Mount-Mansfield_Sunset_Laura-Greenwood-1100px.jpg" alt="Offer 2">
-                <div class="offer-card-content">
-                    <span class="tag">Limited Time</span>
-                    <h3>Mountain Hike</h3>
-                </div>
-            </div>
-            <!-- Add more offers here -->
-        </div>
-        <a href="#" class="view-all-btn">View All Offers</a>
-    </section>
-
-    <!-- Why Use HarborHop Section -->
-    <section class="why-use-section">
-        <h2>Why Use HarborHop?</h2>
-        <div class="features-container">
-            <div class="feature-card">
-                <img src="https://media.licdn.com/dms/image/v2/C4D1BAQFWtDwvyWttvg/company-background_10000/company-background_10000/0/1605151800225/best_price_cruises_cover?e=2147483647&v=beta&t=0Q-f57ZiNmjw-FZvjDUz0EamF6K6ihURFDPotNeLH9g" alt="Feature 1" style="width: 100px; height: 100px;">
-                <p>Best Prices Guaranteed</p>
-            </div>
-            <div class="feature-card">
-                <img src="https://assets.princess.com/is/image/princesscruises/oceannow-crew-delivers-cocktails-couple-lounging-lido-deck-wearing-medallion:5x4?ts=1721071273083" alt="Feature 2" style="width: 100px; height: 100px;">
-                <p>24/7 Customer Support</p>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer>
         <div class="footer-section footer-logo">

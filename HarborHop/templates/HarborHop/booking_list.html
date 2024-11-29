@@ -1,0 +1,18 @@
+{% extends 'HarborHop/header.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<h1>Booking List</h1>
+<a href="{% url 'booking_create' %}">Create New Booking</a>
+<ul>
+    {% for booking in bookings %}
+    <li>
+        {{ booking }} 
+        <a href="{% url 'booking_update' booking.pk %}">Edit</a>
+        <a href="{% url 'booking_delete' booking.pk %}">Delete</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
