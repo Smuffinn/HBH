@@ -375,7 +375,7 @@
         <nav>
             {% if user.is_authenticated %}
                 <a href="{% url 'home' %}">Home</a>
-                <a href="{% url 'checkout' %}">Transaction</a>
+                {% comment %} <a href="{% url 'checkout' %}">Transaction</a> {% endcomment %}
                 <a href="{% url 'about' %}">About Us</a>
                 <a href = "{% url 'booking_create' %}">Booking</a>
                 <a href="{% url 'account' %}">Account</a>

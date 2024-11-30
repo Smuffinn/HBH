@@ -2,80 +2,253 @@
 {% load static %}
 
 {% block content %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        main {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background: white;
-            max-width: 800px;
-            margin: 20px auto;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            font-family: 'Arial', sans-serif;
+        .hero-section {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("{% static 'images/hero-boat.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
         }
 
-        h2 {
-            color: #ff9900;
-            text-align: center;
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            animation: fadeInDown 1s ease-out;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .hero-content p {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff9900, #ff7700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 20px;
         }
 
-        h3 {
-            color: #333;
+        .feature-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        .feature-card p {
+            color: #505965;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        .feature-card:hover h3 {
+            background: linear-gradient(45deg, #ff9900, #ff7700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Add smooth scrolling to the page */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Enhance text selection */
+        ::selection {
+            background: #ff9900;
+            color: white;
+        }
+
+        .history-section {
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url("{% static 'images/vintage-map.jpg' %}");
+            background-size: cover;
+            padding: 60px 20px;
+            margin: 40px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .history-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .history-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(45deg, #ff9900, #ff7700);
+        }
+
+        .history-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #505965;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .history-date {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #ff9900;
+            font-size: 1.2rem;
             margin-top: 20px;
-        }
-
-        p {
-            color: #555;
-            line-height: 1.6;
-        }
-
-        ul {
-            list-style-type: disc;
-            padding-left: 20px;
-        }
-
-        ul li {
-            margin-bottom: 10px;
-            color: #555;
-        }
-
-        .about-section {
-            margin-bottom: 40px;
         }
     </style>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>About HarborHop</h1>
+            <p>Your Gateway to Extraordinary Maritime Adventures</p>
+        </div>
+    </div>
+
     <main>
-        <h2>About Harborhop</h2>
-        <div class="about-section">
-            <p>Welcome to Harborhop, your premier online boat ticket booking service! Our mission is to provide a seamless and enjoyable experience for travelers looking to explore beautiful water destinations.</p>
+        <div class="history-section">
+            <div class="history-content">
+                <h2 class="history-title">Our Journey Through Time</h2>
+                <p class="history-text">
+                    Founded in 2015 by a group of passionate maritime enthusiasts, HarborHop began as a small startup in a coastal town of Cebu. What started as a simple dream to connect island communities has evolved into the Philippines' leading maritime booking platform.
+                </p>
+                <p class="history-text">
+                    Our founders, inspired by the traditional Filipino concept of 'bayanihan,' noticed the challenges faced by travelers and locals alike in securing boat tickets. Many would spend hours in long queues or struggle with unreliable booking systems. This sparked the idea of creating a modern, efficient solution that would revolutionize maritime travel.
+                </p>
+                <p class="history-text">
+                    Through years of dedication and innovation, we've grown from serving just three routes to connecting over 50 destinations across the Philippine archipelago. Our commitment to excellence has earned us multiple awards, including the 'Digital Innovation of the Year' in 2019 and 'Best Travel Tech Platform' in 2021.
+                </p>
+                <div class="history-date">Est. 2015</div>
+            </div>
         </div>
 
-        <div class="about-section">
-            <h3>Our Vision</h3>
-            <p>At Harborhop, we envision a world where traveling by boat is as easy as booking a flight. Our goal is to make boat travel accessible and convenient for everyone.</p>
+        <div class="grid-container">
+            <div class="feature-card">
+                <i class="fas fa-ship"></i>
+                <h3>Our Mission</h3>
+                <p>Revolutionizing maritime travel with seamless booking experiences and exceptional service for every journey.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-compass"></i>
+                <h3>Our Vision</h3>
+                <p>Creating a world where boat travel is accessible, convenient, and enjoyable for everyone, everywhere.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-star"></i>
+                <h3>Why Choose Us</h3>
+                <p>Experience unmatched convenience, reliability, and customer service with our innovative booking platform.</p>
+            </div>
         </div>
 
-        <div class="about-section">
-            <h3>Our Services</h3>
-            <p>We offer a wide range of services, including:</p>
-            <ul>
-                <li>Easy boat ticket booking</li>
-                <li>Real-time availability and pricing</li>
-                <li>Secure payment options</li>
-                <li>Dedicated customer support</li>
-            </ul>
-        </div>
+        <div class="grid-container">
+            <div class="feature-card">
+                <i class="fas fa-ticket-alt"></i>
+                <h3>Easy Booking</h3>
+                <p>Book your tickets in minutes with our user-friendly interface and secure payment system.</p>
+            </div>
 
-        <div class="about-section">
-            <h3>Why Choose Us?</h3>
-            <p>Harborhop is committed to providing excellent customer service and the best travel options. With our user-friendly platform, you can browse, compare, and book tickets effortlessly.</p>
-        </div>
+            <div class="feature-card">
+                <i class="fas fa-clock"></i>
+                <h3>Real-time Updates</h3>
+                <p>Get instant access to availability, pricing, and schedule changes for all routes.</p>
+            </div>
 
-        <div class="about-section">
-            <h3>Join Us on Your Next Adventure!</h3>
-            <p>Whether you're planning a weekend getaway or an extended vacation, Harborhop is here to help you navigate your journey on the water. Let’s set sail!</p>
+            <div class="feature-card">
+                <i class="fas fa-headset"></i>
+                <h3>24/7 Support</h3>
+                <p>Our dedicated support team is always ready to assist you with any queries or concerns.</p>
+            </div>
         </div>
     </main>
 {% endblock %}
