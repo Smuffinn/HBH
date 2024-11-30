@@ -185,16 +185,36 @@
     .why-use-section h2 {
         color: #000000;
     }
+
+    .main-title {
+        font-size: 3.5rem;
+        color: #ff9900;
+        text-align: center;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 </style>
 
 <main>
-    <h2>About HarborHop</h2>
-    <p>Welcome to HarborHop, your ultimate destination for seamless online boat ticket booking! 
-        Embark on a journey with us to explore stunning water destinations with ease and comfort. 
-        Whether you're seeking a tranquil escape or an adventurous expedition, 
-        HarborHop offers the best deals and unparalleled convenience. 
-        Experience the beauty of the seas like never before with our user-friendly platform and exceptional customer service. 
-        Join us today and make your dream voyage a reality!</p>
+    <h2 class="main-title">🚢 HarborHop</h2>
+    <p>Discover the Philippines' hidden paradise islands with HarborHop - Where Every Journey Becomes an Adventure! 
+    
+    Set sail to breathtaking destinations with just a few clicks. From pristine beaches to secret coves, 
+    we connect you to over 100+ routes across the archipelago at exclusive rates. 
+    
+    Why choose us? Simple booking process ⚡, real-time availability 🕒, and up to 30% savings on tickets 💰. 
+    Plus, our local experts are available 24/7 to ensure your journey is smooth sailing from start to finish.
+    
+    Ready to create unforgettable memories? Your next island adventure is just one booking away!</p>
     <a href="{% url 'booking_create' %}" class="btn-learn-more">BOOK NOW!!!</a>
     <a href="{% url 'about' %}" class="btn-learn-more">LEARN MORE ABOUT US</a>
 </main>
