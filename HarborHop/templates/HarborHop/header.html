@@ -251,93 +251,121 @@
             font-size: 14px;
             margin-top: 10px;
         }
-        /* Footer */
+        /* Footer Styles - Updated */
         footer {
-            background-color: #f8f8f8;
-            padding: 40px 20px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            font-size: 14px;
-            color: #333;
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 60px 20px 20px;
+            position: relative;
         }
 
-        .footer-section {
-            flex: 1;
-            min-width: 200px;
-            margin-bottom: 20px;
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
         }
 
-        /* Contact Information Section */
-        .contact-info {
-            font-size: 14px;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        /* Social Media Section */
-        .social-media {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .social-media img {
-            width: 24px;
-            height: 24px;
-            filter: grayscale(1);
-            transition: filter 0.3s;
-        }
-
-        .social-media img:hover {
-            filter: grayscale(0);
-        }
-        .social-media a:nth-child(1) img {
-            src: url('images/facebook-icon.png'); /* Replace with actual image */
-        }
-        .social-media a:nth-child(2) img {
-            src: url('images/twitter-icon.png'); /* Replace with actual image */
-        }
-        .social-media a:nth-child(3) img {
-            src: url('images/instagram-icon.png'); /* Replace with actual image */
-        }
-
-        /* Footer Bottom */
-        .footer-bottom {
-            font-size: 12px;
-            color: #999;
-            text-align: center;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        /* HarborHop Logo */
-        .footer-logo {
-            display: flex;
-            align-items: center;
-        }
-
-        .footer-logo .logo-text {
-            font-weight: bold;
+        .footer-section h4 {
+            color: #ff9900;
             font-size: 18px;
-            color: #333;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
         }
 
-        .footer-logo .highlight {
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #ff9900;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
             color: #ff9900;
         }
 
+        .contact-info p {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ccc;
+        }
+
+        .social-media {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-media a {
+            background-color: #333;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            overflow: hidden; /* Add this to contain the image */
+        }
+
+        .social-media a:hover {
+            background-color: #ff9900;
+            transform: translateY(-3px);
+        }
+
+        .social-media img {
+            width: 20px;
+            height: 20px;
+            /* Remove the incorrect filter */
+            filter: none;
+            transition: transform 0.3s ease;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .footer-logo {
+            margin-bottom: 20px;
+        }
+
+        .footer-logo .logo-text {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
         .tagline {
-            font-size: 12px;
-            color: #999;
-            margin-top: 5px;
+            color: #ccc;
+            font-size: 14px;
         }
-        /* Image Sizes */
-        img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-        }
+
+    
     </style>
 </head>
 <body>
@@ -369,29 +397,62 @@
     </div>
 
     
-    <!-- Footer -->
+    <!-- Updated Footer -->
     <footer>
-        <div class="footer-section footer-logo">
-            <span class="logo-text">HARBOR<span class="highlight">hop</span></span>
-            <p class="tagline">Explore, Experience, Enjoy</p>
-        </div>
-        
-        <div class="footer-section contact-info">
-            <h4>Contact Information</h4>
-            <p>Email: contact@harborhop.com</p>
-            <p>Phone: +1 (555) 123-4567</p>
-            <p>Address: 123 Marina Blvd, Beach City, CA</p>
-        </div>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <div class="logo-text">HARBOR<span class="highlight">hop</span></div>
+                    <p class="tagline">Your Gateway to Maritime Adventures</p>
+                </div>
+                <p style="color: #ccc; margin-top: 20px;">Experience the best cruise booking platform with exclusive deals and premium customer service.</p>
+            </div>
 
-        <div class="footer-section social-media">
-            <h4>Follow Us</h4>
-            <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Facebook_logo_%28square%29.png/640px-Facebook_logo_%28square%29.png" alt="Facebook"></a>
-            <a href="#"><img src="https://pbs.twimg.com/profile_images/1683500894644498435/bwnq-s8f_400x400.jpg" alt="Twitter"></a>
-            <a href="#"><img src="https://img.freepik.com/free-vector/instagram-logo_1199-122.jpg?semt=ais_hybrid" alt="Instagram"></a>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    {% comment %} <li><a href="#">Cruise Deals</a></li>
+                    <li><a href="#">Travel Guide</a></li>
+                    <li><a href="#">FAQ</a></li> {% endcomment %}
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <div class="contact-info">
+                    <p><i class="fas fa-envelope"></i> Steven@harborhop.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Marina Blvd, Beach City, CA</p>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-media">
+                    <a href="#" title="Facebook">
+                        <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" alt="Facebook">
+                    </a>
+                    <a href="#" title="Twitter">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3256/3256013.png" alt="Twitter">
+                    </a>
+                    <a href="#" title="Instagram">
+                        <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram">
+                    </a>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h4>Newsletter</h4>
+                    <form style="display: flex; gap: 10px;">
+                        <input type="email" placeholder="Enter your email" style="padding: 8px; border-radius: 4px; border: none; flex: 1;">
+                        <button type="submit" style="background: #ff9900; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Subscribe</button>
+                    </form>
+                </div>
+            </div>
         </div>
         
         <div class="footer-bottom">
-            &copy; 2024 HarborHop. All rights reserved.
+            <p>&copy; 2024 HarborHop. All rights reserved. | <a href="#" style="color: #888;">Privacy Policy</a> | <a href="#" style="color: #888;">Terms of Service</a></p>
         </div>
     </footer>
 
