@@ -94,6 +94,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - Tabungar, Steven Jan M.
 
 ## Project Links
-- [Gantt Chart](https://docs.google.com/spreadsheets/d/1osmFreJpuNJsqo1y8SJziIvYiVPNEUqMjrD1SCjQWvg/edit?gid=0#gid=0)
+- [Gantt Chart](https://docs.google.com/spreadsheets/d/1BZLc6YBe8YeBp1ZcHK0x8M_s635Xkv3jfvOoUuHHc2o/edit?usp=sharing)
 - [Harbor Hop Figma](https://www.figma.com/design/fEaKTxQBTnwbtAtaRXNcGy/Untitled?node-id=6-282&t=yUtDM0fuRE0mOHqU-1)
 - [ERD](https://online.visual-paradigm.com/share.jsp?id=333630353838332d31#diagram:workspace=odcapejy&proj=0&id=1)
