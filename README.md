@@ -53,13 +53,13 @@ To use the Harbor Management System, open your web browser and navigate to `http
 
 ## Screenshots
 ### Home Page
-![Home Page](images/home_page.jpg)
+![Home Page]("PICTURES\Home.png")
 
 ### Booking Page
 ![Booking Page](images/booking_page.jpg)
 
-### Checkout Page
-![Checkout Page](images/checkout_page.jpg)
+### About Page
+![About Page](PICTURES\About.png)
 
 ## Contributing
 We welcome contributions to the Harbor Management System. To contribute, please follow these steps:
