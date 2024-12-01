@@ -410,7 +410,17 @@ def booking_boracay(request):
         return redirect('home')
 
 def booking_cebu(request):
-    return render(request, 'HarborHop/booking_cebu.html')
+    try:
+        today = timezone.now()
+        context = {
+            'min_date': today.date().isoformat(),
+            'max_date': (today + timezone.timedelta(days=90)).date().isoformat()
+        }
+        return render(request, 'HarborHop/booking_cebu.html', context)
+    except Exception as e:
+        print(f"Error in booking_cebu: {str(e)}")  # Debug print
+        messages.error(request, 'An error occurred while loading the booking page')
+        return redirect('home')
 
 def booking_elnido(request):
     return render(request, 'HarborHop/booking_elnido.html')
