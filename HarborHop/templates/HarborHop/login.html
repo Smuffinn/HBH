@@ -209,17 +209,17 @@
                 <p class="login-link">Don't have an account yet? <a href="{% url 'register' %}">Sign up now</a></p>
 
                 <!-- Social Sign-In Buttons -->
-                <div class="social-buttons">
+                {% comment %} <div class="social-buttons">
                     <button class="facebook">Facebook</button>
                     <button class="google">Google</button>
-                </div>
+                </div> {% endcomment %}
 
                 <!-- Divider -->
-                <div class="divider">
+                {% comment %} <div class="divider">
                     <hr>
                     <span>or</span>
                     <hr>
-                </div>
+                </div> {% endcomment %}
 
                 <!-- Form -->
                 <!-- <form action="{% url 'home' %}" method="post">

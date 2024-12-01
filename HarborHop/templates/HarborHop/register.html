@@ -146,66 +146,39 @@
 <body>
 
     <div class="container">
-        <!-- Image Section (Left Side with background image) -->
+        
         <div class="image-section"></div>
 
-        <!-- Form Section (Right Side) -->
+        
         <div class="form-section">
             <div class="form-container">
                 <h1>HARBOR<span>hop</span></h1>
                 <p>Hop Aboard, Sail Beyond.</p>
 
-                <!-- Sign In Title -->
+                
                 <div class="sign-in-title">Sign In</div>
                 <p class="login-link">Do you have an account? <a href="{% url 'login' %}">Log in now</a></p>
-
-                <!-- Social Sign-In Buttons -->
-                <div class="social-buttons">
+                
+                {% comment %} <div class="social-buttons">
                     <button class="facebook">Facebook</button>
-                    <button class="google">Google</button>
-                </div>
-
-                <!-- Divider -->
-                <div class="divider">
+                    <button class="google"><a href="{% url 'social:begin' 'google-oauth2' %}">Google</button>
+                </div> {% endcomment %}
+                
+                {% comment %} <div class="divider">
                     <hr>
                     <span>or</span>
                     <hr>
-                </div>
+                </div> {% endcomment %}
 
-                <!-- Form -->
+                
                 <form method="POST">
                     {% csrf_token %}
-<!--                     
-                    <div class="form-group">
-                        <label for="id_username">Username:</label>
-                        <input type="text" name="username" id="id_username" class="form-control" value="{{ form.username.value|default_if_none:'' }}">
-                        <div class="text-danger">{{ form.username.errors }}</div>
-                    </div>
-            
-                    <div class="form-group">
-                        <label for="id_email">Email</label>
-                        <input type="email" name="email" id="id_email" class="form-control" value="{{ form.email.value|default_if_none:'' }}">
-                        <div class="text-danger">{{ form.email.errors }}</div>
-                    </div>
-            
-                    <div class="form-group">
-                        <label for="id_password1">Password</label>
-                        <input type="password" name="password1" id="id_password1" class="form-control">
-                        <div class="text-danger">{{ form.password1.errors }}</div>
-                    </div>
-            
-                    <div class="form-group">
-                        <label for="id_password2">Confirm Password</label>
-                        <input type="password" name="password2" id="id_password2" class="form-control">
-                        <div class="text-danger">{{ form.password2.errors }}</div>
-                    </div>
-             -->
-             
+
              
              
              
                  {{ form.as_p }}		
-                 <!-- <input type="submit" value="Register" /> -->
+                 
              
                     <button type="submit" class="btn btn-primary">Sign Up</button>
                 </form>

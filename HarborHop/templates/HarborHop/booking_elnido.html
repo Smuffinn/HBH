@@ -1,0 +1,39 @@
+{% extends 'HarborHop/booking_template.html' %}
+
+{% block booking_title %}El Nido Express Booking{% endblock %}
+{% block package_image %}https://assets.cntraveller.in/photos/60ba26c0bfe773a828a47146/4:3/w_1440,h_1080,c_limit/Palawan-GettyImages-1273584292.jpg{% endblock %}
+{% block package_name %}El Nido{% endblock %}
+{% block badge_text %}Flash Sale{% endblock %}
+{% block package_title %}Manila ↔ El Nido Express{% endblock %}
+{% block price %}Buy 1 Get 1 Free!{% endblock %}
+
+{% block package_features %}
+    <li>24 Hours Flash Sale</li>
+    <li>Premium Ferry Service</li>
+    <li>Complimentary Meals</li>
+{% endblock %}
+
+{% block booking_form %}
+    <input type="hidden" name="package_type" value="elnido_express">
+    <input type="hidden" name="base_price" value="1999">
+    
+    <div class="form-group">
+        <label>Travel Date</label>
+        <input type="date" name="travel_date" required>
+    </div>
+    
+    <div class="form-group">
+        <label>Number of Pairs (Buy 1 Get 1)</label>
+        <input type="number" name="passenger_pairs" min="1" required>
+    </div>
+
+    <div class="form-group">
+        <label>Preferred Schedule</label>
+        <select name="departure_time" required>
+            <option value="morning">Morning (7:00 AM)</option>
+            <option value="evening">Evening (7:00 PM)</option>
+        </select>
+    </div>
+
+    <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+{% endblock %}

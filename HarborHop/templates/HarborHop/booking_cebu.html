@@ -1,0 +1,36 @@
+{% extends 'HarborHop/booking_template.html' %}
+
+{% block booking_title %}Cebu Island Hopper Booking{% endblock %}
+{% block package_image %}https://gttp.imgix.net/198182/x/0/top-10-tourist-spots-in-cebu-10.jpg{% endblock %}
+{% block package_name %}Cebu{% endblock %}
+{% block badge_text %}Family Package{% endblock %}
+{% block package_title %}4 Islands in 1 Day Tour{% endblock %}
+{% block price %}₱2,499 per adult (Kids Free){% endblock %}
+
+{% block package_features %}
+    <li>4 Islands Tour Package</li>
+    <li>Includes Lunch and Snacks</li>
+    <li>Free for children under 12</li>
+{% endblock %}
+
+{% block booking_form %}
+    <input type="hidden" name="package_type" value="cebu_hopper">
+    <input type="hidden" name="base_price" value="2499">
+    
+    <div class="form-group">
+        <label>Tour Date</label>
+        <input type="date" name="travel_date" required>
+    </div>
+    
+    <div class="form-group">
+        <label>Number of Adults</label>
+        <input type="number" name="adult_passengers" min="1" required>
+    </div>
+
+    <div class="form-group">
+        <label>Number of Children (Under 12)</label>
+        <input type="number" name="child_passengers" min="0">
+    </div>
+
+    <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+{% endblock %}

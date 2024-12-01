@@ -375,10 +375,15 @@
         <nav>
             {% if user.is_authenticated %}
                 <a href="{% url 'home' %}">Home</a>
-                {% comment %} <a href="{% url 'checkout' %}">Transaction</a> {% endcomment %}
                 <a href="{% url 'about' %}">About Us</a>
                 <a href = "{% url 'booking_create' %}">Booking</a>
-                <a href="{% url 'account' %}">Account</a>
+                <a href="{% url 'account' %}">
+                    {% if user.get_full_name %}
+                        {{ user.get_full_name }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
+                </a>
                 <a href="{% url 'logout' %}" class="login-btn">Log out</a>
             {% else %}
                 <a href="{% url 'home' %}">Home</a>

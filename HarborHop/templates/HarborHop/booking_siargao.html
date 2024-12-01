@@ -1,0 +1,39 @@
+{% extends 'HarborHop/booking_template.html' %}
+
+{% block booking_title %}Siargao Surfer Package{% endblock %}
+{% block package_image %}https://i.ytimg.com/vi/l6K6FgR2xB8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCVmTDDTDEHhgshytd1yuDBy914bA{% endblock %}
+{% block package_name %}Siargao{% endblock %}
+{% block badge_text %}Student Offer{% endblock %}
+{% block package_title %}Student Special Package{% endblock %}
+{% block price %}20% Student Discount{% endblock %}
+
+{% block package_features %}
+    <li>Free Surf Board Transport</li>
+    <li>Student ID Required</li>
+    <li>Flexible Dates</li>
+{% endblock %}
+
+{% block booking_form %}
+    <input type="hidden" name="package_type" value="siargao_student">
+    <input type="hidden" name="base_price" value="1499">
+    
+    <div class="form-group">
+        <label>Travel Date</label>
+        <input type="date" name="travel_date" required>
+    </div>
+    
+    <div class="form-group">
+        <label>Student ID Number</label>
+        <input type="text" name="student_id" required>
+    </div>
+
+    <div class="form-group">
+        <label>Surf Board Transport</label>
+        <select name="board_transport" required>
+            <option value="yes">Yes, I need board transport</option>
+            <option value="no">No board transport needed</option>
+        </select>
+    </div>
+
+    <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+{% endblock %}

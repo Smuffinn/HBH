@@ -2,41 +2,294 @@
 {% load static %}
 
 {% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background: url('https://images.pexels.com/photos/1223649/pexels-photo-1223649.jpeg') no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+    }
 
-    
-    <section class="search-section">
-        <div class="search-box">
-            <!-- <h2>Find Your Trip</h2>
-            <p>Set Your Arrival & Departure Destination & Travel Dates</p>
-            <input type="text" id="from" placeholder="From">
-            <input type="text" id="to" placeholder="To">
-            <input type="date" id="depart-date" placeholder="Depart Date">
-            <input type="date" id="return-date" placeholder="Return Date">
-            <div class="passenger-controls">
-                <div class="passenger-control">
-                    <label>Adults</label>
-                    <button onclick="updateCount('adult', -1)">-</button>
-                    <span id="adult-count">1</span>
-                    <button onclick="updateCount('adult', 1)">+</button>
+    .booking-section {
+        padding: 40px 0;
+        position: relative;
+    }
+
+    .booking-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .booking-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .section-header h2 {
+        font-size: 2.5em;
+        color: white;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .booking-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    .booking-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .booking-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .booking-form {
+        padding: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .price-summary {
+        background: #f8f9fa;
+        padding: 20px;
+        border-top: 1px solid #ddd;
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .total-price {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #ff9900;
+    }
+
+    .book-now-btn {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        background: #ff9900;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .book-now-btn:hover {
+        background: #e68a00;
+    }
+
+    .route-preview {
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .route-details {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .route-point {
+        text-align: center;
+    }
+
+    .route-point h3 {
+        margin: 0;
+        color: #333;
+    }
+
+    .route-point p {
+        margin: 5px 0;
+        color: #666;
+    }
+
+    .route-line {
+        flex-grow: 1;
+        height: 2px;
+        background: #ff9900;
+        margin: 0 15px;
+        position: relative;
+    }
+
+    .route-line::after {
+        content: '→';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #ff9900;
+        font-size: 20px;
+    }
+</style>
+
+<section class="booking-section">
+    <div class="booking-container">
+        <div class="section-header">
+            <h2>🚢 Book Your Journey</h2>
+        </div>
+
+        <div class="booking-grid">
+            <!-- Route Selection Card -->
+            <div class="booking-card">
+                <div class="route-preview">
+                    <div class="route-details">
+                        <div class="route-point">
+                            <h3>From</h3>
+                            <p>Manila</p>
+                        </div>
+                        <div class="route-line"></div>
+                        <div class="route-point">
+                            <h3>To</h3>
+                            <p>Boracay</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="passenger-control">
-                    <label>Children</label>
-                    <button onclick="updateCount('child', -1)">-</button>
-                    <span id="child-count">0</span>
-                    <button onclick="updateCount('child', 1)">+</button>
+                
+                <form class="booking-form" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="departure">Departure Port</label>
+                        <select id="departure" name="departure" required>
+                            <option value="">Select departure port</option>
+                            <option value="manila">Manila</option>
+                            <option value="cebu">Cebu</option>
+                            <option value="boracay">Boracay</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arrival">Arrival Port</label>
+                        <select id="arrival" name="arrival" required>
+                            <option value="">Select arrival port</option>
+                            <option value="boracay">Boracay</option>
+                            <option value="cebu">Cebu</option>
+                            <option value="manila">Manila</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Travel Date</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="passengers">Number of Passengers</label>
+                        <input type="number" id="passengers" name="passengers" min="1" max="10" value="1" required>
+                    </div>
+
+                    <div class="price-summary">
+                        <div class="price-row">
+                            <span>Base Fare</span>
+                            <span>₱999.00</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Tax & Fees</span>
+                            <span>₱150.00</span>
+                        </div>
+                        <div class="price-row total-price">
+                            <span>Total</span>
+                            <span>₱1,149.00</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="book-now-btn">Book Now</button>
+                </form>
+            </div>
+
+            <!-- Booking Summary Card -->
+            <div class="booking-card">
+                <div class="booking-form">
+                    <h3>Popular Routes</h3>
+                    <div class="route-preview">
+                        <div class="route-details">
+                            <div class="route-point">
+                                <h3>Manila</h3>
+                                <p>2:00 PM</p>
+                            </div>
+                            <div class="route-line"></div>
+                            <div class="route-point">
+                                <h3>Boracay</h3>
+                                <p>4:00 PM</p>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span>From</span>
+                            <span class="total-price">₱999.00</span>
+                        </div>
+                    </div>
+{% comment %} 
+                    <div class="route-preview">
+                        <div class="route-details">
+                            <div class="route-point">
+                                <h3>Cebu</h3>
+                                <p>9:00 AM</p>
+                            </div>
+                            <div class="route-line"></div>
+                            <div class="route-point">
+                                <h3>Siargao</h3>
+                                <p>11:00 AM</p>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span>From</span>
+                            <span class="total-price">₱1,299.00</span>
+                        </div> {% endcomment %}
+                    </div>
                 </div>
             </div>
-            <div style="display: flex; gap: 2%;">
-                <button onclick="resetSearch()">Reset</button>
-                <button>Search</button>
-            </div> -->
-            <h1>Create Booking</h1>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Save</button>
-            </form>
-            <a href="{% url 'booking_list' %}">Back to List</a>
         </div>
-    </section>
+    </div>
+</section>
 {% endblock %}

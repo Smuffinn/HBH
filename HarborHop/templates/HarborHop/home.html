@@ -456,6 +456,13 @@
     </div>
 </section>
 
+{% comment %} <div class="destination-links">
+    <a href="{% url 'booking_boracay' %}" class="destination">Boracay</a>
+    <a href="{% url 'booking_cebu' %}" class="destination">Cebu</a>
+    <a href="{% url 'booking_elnido' %}" class="destination">El Nido</a>
+    <a href="{% url 'booking_siargao' %}" class="destination">Siargao</a>
+</div> {% endcomment %}
+
 <!-- Latest Offers Section -->
 <section class="latest-offers-section">
     <div class="section-header">
@@ -472,7 +479,7 @@
                 <p>Manila ↔ Boracay<br>
                 Starting at ₱999<br>
                 Valid until June 2024</p>
-                <a href="{% url 'booking_create' %}" class="book-now-btn">Book Now</a>
+                <a href="{% url 'booking_boracay' %}" class="book-now-btn">Book Boracay Trip</a>
             </div>
         </div>
 
@@ -485,7 +492,7 @@
                 <p>4 Islands in 1 Day<br>
                 Kids Travel Free<br>
                 Includes Lunch</p>
-                <a href="{% url 'booking_create' %}" class="book-now-btn">Book Now</a>
+                <a href="{% url 'booking_cebu' %}" class="book-now-btn">Book Now</a>
             </div>
         </div>
 
@@ -498,7 +505,7 @@
                 <p>Manila ↔ El Nido<br>
                 Buy 1 Get 1 Free<br>
                 24 Hours Only!</p>
-                <a href="{% url 'booking_create' %}" class="book-now-btn">Book Now</a>
+                <a href="{% url 'booking_elnido' %}" class="book-now-btn">Book Now</a>
             </div>
         </div>
 
@@ -511,7 +518,7 @@
                 <p>20% Student Discount<br>
                 Free Surf Board Transport<br>
                 Valid ID Required</p>
-                <a href="{% url 'booking_create' %}" class="book-now-btn">Book Now</a>
+                <a href="{% url 'booking_siargao' %}" class="book-now-btn">Book Now</a>
             </div>
         </div>
     </div>
