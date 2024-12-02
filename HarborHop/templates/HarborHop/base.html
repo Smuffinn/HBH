@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HarborHop - {% block title %}Welcome{% endblock %}</title>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    {% include 'HarborHop/header.html' %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer from header.html should be moved here -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <div class="logo-text">HARBOR<span class="highlight">hop</span></div>
+                    <p class="tagline">Your Gateway to Maritime Adventures</p>
+                </div>
+                <p style="color: #ccc; margin-top: 20px;">Experience the best cruise booking platform with exclusive deals and premium customer service.</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    {% comment %} <li><a href="#">Cruise Deals</a></li>
+                    <li><a href="#">Travel Guide</a></li>
+                    <li><a href="#">FAQ</a></li> {% endcomment %}
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <div class="contact-info">
+                    <p><i class="fas fa-envelope"></i> Steven@harborhop.com</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Marina Blvd, Beach City, CA</p>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-media">
+                    <a href="#" title="Facebook">
+                        <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" alt="Facebook">
+                    </a>
+                    <a href="#" title="Twitter">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3256/3256013.png" alt="Twitter">
+                    </a>
+                    <a href="#" title="Instagram">
+                        <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="Instagram">
+                    </a>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h4>Newsletter</h4>
+                    <form style="display: flex; gap: 10px;">
+                        <input type="email" placeholder="Enter your email" style="padding: 8px; border-radius: 4px; border: none; flex: 1;">
+                        <button type="submit" style="background: #ff9900; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 HarborHop. All rights reserved. | <a href="#" style="color: #888;">Privacy Policy</a> | <a href="#" style="color: #888;">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

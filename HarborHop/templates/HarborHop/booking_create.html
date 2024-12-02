@@ -2,6 +2,145 @@
 {% load static %}
 
 {% block content %}
+<div class="booking-container">
+    <div class="section-header">
+        <h2>Create Your Custom Journey</h2>
+        <p>Plan your perfect voyage with HarborHop</p>
+    </div>
+
+    <div class="booking-grid">
+        <!-- Dynamic Booking Form -->
+        <div class="booking-card">
+            <form class="booking-form" method="POST" action="{% url 'payment' %}" id="bookingForm">
+                {% csrf_token %}
+                <!-- Add this hidden input field -->
+                <input type="hidden" name="base_price" id="base_price">
+                
+                <!-- Route Selection -->
+                <div class="form-section">
+                    <h3>Route Details</h3>
+                    <div class="form-group">
+                        <label for="departure_port">From</label>
+                        <select name="departure_port" id="departure_port" required>
+                            <option value="">Select departure port</option>
+                            {% for port in ports %}
+                                <option value="{{ port.id }}">{{ port.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arrival_port">To</label>
+                        <select name="arrival_port" id="arrival_port" required disabled>
+                            <option value="">Select destination first</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Schedule Selection -->
+                <div class="form-section">
+                    <h3>Travel Details</h3>
+                    <div class="form-group">
+                        <label for="travel_date">Travel Date</label>
+                        <input type="date" id="travel_date" name="travel_date" required
+                               min="{{ min_date }}" max="{{ max_date }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="schedule">Available Schedules</label>
+                        <select name="schedule_id" id="schedule" required disabled>
+                            <option value="">Select route and date first</option>
+                        </select>
+                        <small class="text-muted" id="schedule-hint">Select a departure port and date to view available schedules</small>
+                    </div>
+                </div>
+
+                <!-- Passenger Information -->
+                <div class="form-section">
+                    <h3>Passenger Details</h3>
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" name="name" id="name" required value="{{ request.user.get_full_name }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" required value="{{ request.user.email }}">
+                    </div>
+
+                    <!-- Add these new fields -->
+                    <div class="form-group">
+                        <label for="phone_number">Phone Number</label>
+                        <input type="tel" name="phone_number" id="phone_number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" name="age" id="age" required min="1" max="120">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select name="gender" id="gender" required>
+                            <option value="">Select gender</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                            <option value="O">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Add a hidden field for package type -->
+                    <input type="hidden" name="package_type" value="regular">
+
+                    <div class="form-group passenger-count">
+                        <label for="passengers">Number of Passengers</label>
+                        <div class="passenger-controls">
+                            <button type="button" class="passenger-btn" data-action="decrease">-</button>
+                            <input type="number" name="passengers" id="passengers" min="1" max="10" value="1" required>
+                            <button type="button" class="passenger-btn" data-action="increase">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Summary -->
+                <div class="price-summary">
+                    <div class="price-row">
+                        <span>Base Fare</span>
+                        <span id="baseFare">₱0.00</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Taxes & Fees (12%)</span>
+                        <span id="taxes">₱0.00</span>
+                    </div>
+                    <div class="price-row total-price">
+                        <span>Total</span>
+                        <span id="totalPrice">₱0.00</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="book-now-btn" disabled>Proceed to Payment</button>
+            </form>
+        </div>
+
+        <!-- Route Preview -->
+        <div class="booking-card">
+            <div class="route-preview">
+                <h3>Journey Preview</h3>
+                <div id="routeVisualization" class="route-visualization">
+                    <div class="route-point start">Select your departure</div>
+                    <div class="route-line"></div>
+                    <div class="route-point end">Select your destination</div>
+                </div>
+                <div id="journeyDetails" class="journey-details">
+                    <p class="duration">Duration: --</p>
+                    <p class="distance">Distance: --</p>
+                    <p class="vessel">Vessel: --</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     body {
         font-family: 'Arial', sans-serif;
@@ -172,124 +311,320 @@
         color: #ff9900;
         font-size: 20px;
     }
+
+    .form-section {
+        margin-bottom: 25px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+    }
+
+    .form-section h3 {
+        margin-bottom: 15px;
+        color: #333;
+        border-bottom: 2px solid #ff9900;
+        padding-bottom: 5px;
+    }
+
+    .passenger-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .passenger-btn {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: #ff9900;
+        color: white;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .passenger-btn:hover {
+        background: #e68a00;
+    }
+
+    .route-visualization {
+        margin: 20px 0;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+    }
+
+    .journey-details {
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    .journey-details p {
+        margin: 10px 0;
+        color: #666;
+    }
+
+    .route-point {
+        background: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-align: center;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .route-line {
+        position: relative;
+        height: 3px;
+        background: linear-gradient(to right, #ff9900, #ff6b6b);
+        margin: 20px 0;
+        animation: flowLine 2s infinite linear;
+    }
+
+    @keyframes flowLine {
+        0% {
+            background-position: 0 0;
+        }
+        100% {
+            background-position: 50px 0;
+        }
+    }
+
+    .journey-details {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .journey-details p {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .journey-details p:last-child {
+        border-bottom: none;
+    }
 </style>
 
-<section class="booking-section">
-    <div class="booking-container">
-        <div class="section-header">
-            <h2>🚢 Book Your Journey</h2>
-        </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const departureSelect = document.getElementById('departure_port');
+        const arrivalSelect = document.getElementById('arrival_port');
+        const dateInput = document.getElementById('travel_date');
+        const scheduleSelect = document.getElementById('schedule');
+        const scheduleHint = document.getElementById('schedule-hint');
 
-        <div class="booking-grid">
-            <!-- Route Selection Card -->
-            <div class="booking-card">
-                <div class="route-preview">
-                    <div class="route-details">
-                        <div class="route-point">
-                            <h3>From</h3>
-                            <p>Manila</p>
-                        </div>
-                        <div class="route-line"></div>
-                        <div class="route-point">
-                            <h3>To</h3>
-                            <p>Boracay</p>
-                        </div>
-                    </div>
-                </div>
+        // Add change event for departure port
+        departureSelect.addEventListener('change', async function() {
+            const departureId = this.value;
+            arrivalSelect.innerHTML = '<option value="">Select destination</option>';
+            arrivalSelect.disabled = true;
+
+            if (!departureId) return;
+
+            try {
+                const response = await fetch(`/api/ports/available/${departureId}/`);
+                if (!response.ok) throw new Error('Failed to fetch ports');
                 
-                <form class="booking-form" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="departure">Departure Port</label>
-                        <select id="departure" name="departure" required>
-                            <option value="">Select departure port</option>
-                            <option value="manila">Manila</option>
-                            <option value="cebu">Cebu</option>
-                            <option value="boracay">Boracay</option>
-                        </select>
-                    </div>
+                const ports = await response.json();
+                
+                ports.forEach(port => {
+                    const option = document.createElement('option');
+                    option.value = port.id;
+                    option.textContent = port.name;
+                    arrivalSelect.appendChild(option);
+                });
+                arrivalSelect.disabled = false;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                arrivalSelect.innerHTML = '<option value="">Error loading destinations</option>';
+            }
+        });
 
-                    <div class="form-group">
-                        <label for="arrival">Arrival Port</label>
-                        <select id="arrival" name="arrival" required>
-                            <option value="">Select arrival port</option>
-                            <option value="boracay">Boracay</option>
-                            <option value="cebu">Cebu</option>
-                            <option value="manila">Manila</option>
-                        </select>
-                    </div>
+        // Function to load schedules
+        async function loadSchedules() {
+            if (!departureSelect.value || !arrivalSelect.value || !dateInput.value) {
+                return;
+            }
 
-                    <div class="form-group">
-                        <label for="date">Travel Date</label>
-                        <input type="date" id="date" name="date" required>
-                    </div>
+            scheduleSelect.disabled = true;
+            scheduleSelect.innerHTML = '<option value="">Loading...</option>';
 
-                    <div class="form-group">
-                        <label for="passengers">Number of Passengers</label>
-                        <input type="number" id="passengers" name="passengers" min="1" max="10" value="1" required>
-                    </div>
+            try {
+                const response = await fetch(
+                    `/api/schedules/available/?departure=${departureSelect.value}&arrival=${arrivalSelect.value}&date=${dateInput.value}`
+                );
+                if (!response.ok) throw new Error('Failed to fetch schedules');
+                
+                const schedules = await response.json();
+                
+                scheduleSelect.innerHTML = '<option value="">Select a schedule</option>';
+                
+                if (schedules.error) {
+                    throw new Error(schedules.error);
+                }
 
-                    <div class="price-summary">
-                        <div class="price-row">
-                            <span>Base Fare</span>
-                            <span>₱999.00</span>
-                        </div>
-                        <div class="price-row">
-                            <span>Tax & Fees</span>
-                            <span>₱150.00</span>
-                        </div>
-                        <div class="price-row total-price">
-                            <span>Total</span>
-                            <span>₱1,149.00</span>
-                        </div>
-                    </div>
+                if (schedules.length === 0) {
+                    scheduleSelect.innerHTML = '<option value="" disabled>No schedules available</option>';
+                    return;
+                }
 
-                    <button type="submit" class="book-now-btn">Book Now</button>
-                </form>
-            </div>
+                schedules.forEach(schedule => {
+                    const departureTime = new Date(schedule.departure_time);
+                    const option = document.createElement('option');
+                    option.value = schedule.id;
+                    option.dataset.price = schedule.base_price;
+                    option.dataset.seats = schedule.available_seats;
+                    option.textContent = `${departureTime.toLocaleTimeString()} - ${schedule.vessel__name} (${schedule.available_seats} seats)`;
+                    scheduleSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                scheduleSelect.innerHTML = '<option value="">Error loading schedules</option>';
+            } finally {
+                scheduleSelect.disabled = false;
+            }
+        }
 
-            <!-- Booking Summary Card -->
-            <div class="booking-card">
-                <div class="booking-form">
-                    <h3>Popular Routes</h3>
-                    <div class="route-preview">
-                        <div class="route-details">
-                            <div class="route-point">
-                                <h3>Manila</h3>
-                                <p>2:00 PM</p>
-                            </div>
-                            <div class="route-line"></div>
-                            <div class="route-point">
-                                <h3>Boracay</h3>
-                                <p>4:00 PM</p>
-                            </div>
-                        </div>
-                        <div class="price-row">
-                            <span>From</span>
-                            <span class="total-price">₱999.00</span>
-                        </div>
-                    </div>
-{% comment %} 
-                    <div class="route-preview">
-                        <div class="route-details">
-                            <div class="route-point">
-                                <h3>Cebu</h3>
-                                <p>9:00 AM</p>
-                            </div>
-                            <div class="route-line"></div>
-                            <div class="route-point">
-                                <h3>Siargao</h3>
-                                <p>11:00 AM</p>
-                            </div>
-                        </div>
-                        <div class="price-row">
-                            <span>From</span>
-                            <span class="total-price">₱1,299.00</span>
-                        </div> {% endcomment %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+        // Add event listeners for schedule loading
+        dateInput.addEventListener('change', loadSchedules);
+        arrivalSelect.addEventListener('change', loadSchedules);
+
+        // Update price calculation when schedule or passengers change
+        scheduleSelect.addEventListener('change', function() {
+            const selectedOption = this.selectedOptions[0];
+            if (selectedOption) {
+                document.getElementById('base_price').value = selectedOption.dataset.price;
+            }
+            calculatePrice();
+            updateJourneyPreview(departureSelect, arrivalSelect, scheduleSelect);
+        });
+        document.querySelector('input[name="passengers"]').addEventListener('change', calculatePrice);
+
+        // Add passenger count controls
+        const passengerInput = document.querySelector('input[name="passengers"]');
+        const passengerButtons = document.querySelectorAll('.passenger-btn');
+        
+        passengerButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.dataset.action;
+                const currentValue = parseInt(passengerInput.value);
+                const min = parseInt(passengerInput.min);
+                const max = parseInt(passengerInput.max);
+                
+                if (action === 'increase' && currentValue < max) {
+                    passengerInput.value = currentValue + 1;
+                } else if (action === 'decrease' && currentValue > min) {
+                    passengerInput.value = currentValue - 1;
+                }
+                
+                // Trigger price recalculation
+                calculatePrice();
+            });
+        });
+
+        // Add function to update journey preview
+        function updateJourneyPreview(departurePort, arrivalPort, schedule) {
+            const startPoint = document.querySelector('.route-point.start');
+            const endPoint = document.querySelector('.route-point.end');
+            const journeyDetails = document.getElementById('journeyDetails');
+
+            // Update route points
+            startPoint.textContent = departurePort ? departurePort.options[departurePort.selectedIndex].text : 'Select your departure';
+            endPoint.textContent = arrivalPort ? arrivalPort.options[arrivalPort.selectedIndex].text : 'Select your destination';
+
+            // Update journey details
+            if (schedule && schedule.selectedOptions.length > 0) {
+                const selectedSchedule = schedule.selectedOptions[0];
+                journeyDetails.innerHTML = `
+                    <p class="duration">Duration: ~2 hours</p>
+                    <p class="distance">Distance: Calculating...</p>
+                    <p class="vessel">Vessel: ${selectedSchedule.text.split(' - ')[1]}</p>
+                `;
+            } else {
+                journeyDetails.innerHTML = `
+                    <p class="duration">Duration: --</p>
+                    <p class="distance">Distance: --</p>
+                    <p class="vessel">Vessel: --</p>
+                `;
+            }
+        }
+
+        // Add event listeners to update preview
+        departureSelect.addEventListener('change', () => updateJourneyPreview(departureSelect, arrivalSelect, scheduleSelect));
+        arrivalSelect.addEventListener('change', () => updateJourneyPreview(departureSelect, arrivalSelect, scheduleSelect));
+        scheduleSelect.addEventListener('change', () => updateJourneyPreview(departureSelect, arrivalSelect, scheduleSelect));
+
+        // Add form validation function
+        function validateForm() {
+            const form = document.getElementById('bookingForm');
+            const requiredFields = form.querySelectorAll('[required]');
+            const submitButton = form.querySelector('.book-now-btn');
+            
+            let isValid = true;
+            requiredFields.forEach(field => {
+                if (!field.value || (field.disabled && field.tagName === 'SELECT')) {
+                    isValid = false;
+                }
+            });
+            
+            submitButton.disabled = !isValid;
+        }
+
+        // Add event listeners for form validation
+        const form = document.getElementById('bookingForm');
+        form.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener('change', validateForm);
+        });
+
+        // Add validation check after schedules are loaded
+        const originalLoadSchedules = loadSchedules;
+        loadSchedules = async function() {
+            await originalLoadSchedules();
+            validateForm();
+        };
+
+        // Add validation check after passenger count changes
+        passengerButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // ...existing passenger button code...
+                validateForm();
+            });
+        });
+
+        // Initial validation
+        validateForm();
+    });
+
+    // Add the calculatePrice function
+    function calculatePrice() {
+        const scheduleSelect = document.getElementById('schedule');
+        const passengersInput = document.querySelector('input[name="passengers"]');
+        const baseFareElement = document.getElementById('baseFare');
+        const taxesElement = document.getElementById('taxes');
+        const totalPriceElement = document.getElementById('totalPrice');
+
+        if (!scheduleSelect.value || !passengersInput.value) return;
+
+        const basePrice = parseFloat(scheduleSelect.selectedOptions[0].dataset.price);
+        const passengers = parseInt(passengersInput.value);
+        
+        const baseFare = basePrice * passengers;
+        const taxes = baseFare * 0.12;
+        const total = baseFare + taxes;
+
+        baseFareElement.textContent = `₱${baseFare.toFixed(2)}`;
+        taxesElement.textContent = `₱${taxes.toFixed(2)}`;
+        totalPriceElement.textContent = `₱${total.toFixed(2)}`;
+    }
+</script>
+
 {% endblock %}

@@ -8,11 +8,12 @@
 {% block price %}₱{{ route.base_price }} per person{% endblock %}
 
 {% block package_features %}
-    <li>Valid until June 2024</li>
+    <li>30% OFF - Special Discount</li>
     <li>Direct ferry service</li>
     <li>Free terminal transfer</li>
     <li>Journey duration: {{ route.duration }}</li>
     <li>Distance: {{ route.distance }} nautical miles</li>
+    <li>Valid until June 2024</li>
 {% endblock %}
 
 {% block booking_form %}
@@ -22,6 +23,37 @@
     <input type="hidden" name="package_type" value="boracay_express">
     <input type="hidden" name="base_price" value="{{ route.base_price }}">
     
+    <!-- Passenger Details -->
+    <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" required value="{{ request.user.get_full_name }}">
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" required value="{{ request.user.email }}">
+    </div>
+
+    <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" name="phone_number" required pattern="[0-9]{11}" title="Please enter a valid 11-digit phone number">
+    </div>
+
+    <div class="form-group">
+        <label>Gender</label>
+        <select name="gender" required>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+            <option value="O">Other</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Age</label>
+        <input type="number" name="age" required min="0" max="120">
+    </div>
+
+    <!-- Trip Details -->
     <div class="form-group">
         <label>Travel Date</label>
         <input type="date" name="travel_date" required id="travel_date"
@@ -44,49 +76,11 @@
                 <option value="">Select travel date first</option>
             {% endif %}
         </select>
-        <small class="text-muted">Please select your preferred departure time</small>
     </div>
-    
+
     <div class="form-group">
         <label>Number of Passengers</label>
-        <input type="number" name="passengers" min="1" max="10" required>
-    </div>
-
-    <div class="form-group">
-        <label>Select Time</label>
-        <select name="departure_time" required>
-            <option value="morning">Morning (6:00 AM)</option>
-            <option value="afternoon">Afternoon (2:00 PM)</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Name</label>
-        <input type="text" name="name" required value="{{ request.user.get_full_name }}">
-    </div>
-
-    <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" required value="{{ request.user.email }}">
-    </div>
-
-    <div class="form-group">
-        <label>Phone Number</label>
-        <input type="tel" name="phone_number" required>
-    </div>
-
-    <div class="form-group">
-        <label>Gender</label>
-        <select name="gender" required>
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-            <option value="O">Other</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Age</label>
-        <input type="number" name="age" required min="0">
+        <input type="number" name="passengers" min="1" max="10" required value="1">
     </div>
 
     <button type="submit" class="checkout-btn">Proceed to Checkout</button>
@@ -108,32 +102,51 @@ document.addEventListener('DOMContentLoaded', function() {
         scheduleSelect.disabled = true;
 
         try {
-            // Make API call
-            const response = await fetch(`/api/schedules/available/?route={{ route.id }}&date=${date}`);
-            if (!response.ok) throw new Error('Failed to fetch schedules');
+            // Make API call with proper route ID
+            const routeId = '{{ route.id }}';
+            console.log('Fetching schedules for route:', routeId, 'date:', date);
             
-            const schedules = await response.json();
+            const response = await fetch(`/api/schedules/available/?route=${routeId}&date=${date}`);
+            const data = await response.json();
+            
+            console.log('API Response:', data);
+
             scheduleSelect.innerHTML = '<option value="">Select a schedule</option>';
             
-            if (!Array.isArray(schedules) || schedules.length === 0) {
-                scheduleSelect.innerHTML += '<option value="" disabled>No schedules available for this date</option>';
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            if (!Array.isArray(data) || data.length === 0) {
+                scheduleSelect.innerHTML = '<option value="" disabled>No schedules available for this date</option>';
                 return;
             }
             
-            schedules.forEach(schedule => {
+            data.forEach(schedule => {
                 const departureTime = new Date(schedule.departure_time);
                 const option = document.createElement('option');
                 option.value = schedule.id;
-                option.textContent = `${departureTime.toLocaleTimeString()} - ${schedule.vessel__name} (${schedule.available_seats} seats available)`;
+                option.dataset.seats = schedule.available_seats;
+                option.textContent = `${departureTime.toLocaleTimeString()} - ${schedule.vessel__name} (${schedule.available_seats} seats)`;
                 scheduleSelect.appendChild(option);
             });
         } catch (error) {
             console.error('Error:', error);
-            scheduleSelect.innerHTML = '<option value="">Error loading schedules</option>';
+            scheduleSelect.innerHTML = '<option value="">Error loading schedules: ' + error.message + '</option>';
         } finally {
             scheduleSelect.disabled = false;
         }
     });
+
+    // Add form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const selectedSchedule = scheduleSelect.value;
+        if (!selectedSchedule) {
+            e.preventDefault();
+            alert('Please select a schedule');
+        }
+    });
 });
 </script>
-{% endblock %}
+{% endblock %} 

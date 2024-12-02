@@ -17,7 +17,7 @@ from .views import (
     schedule_list, schedule_create, schedule_update, schedule_delete,
     
     # API endpoints
-    get_available_routes, get_available_schedules, calculate_fare,
+    get_available_routes, get_available_schedules, calculate_fare, get_available_ports,
     
     # Destination booking views
     booking_boracay, booking_cebu, booking_elnido, booking_siargao,
@@ -27,6 +27,13 @@ from .views import (
 )
 
 urlpatterns = [
+    # Move booking routes to the top
+    path('booking/boracay/', booking_boracay, name='booking_boracay'),
+    path('booking/cebu/', booking_cebu, name='booking_cebu'),
+    path('booking/elnido/', booking_elnido, name='booking_elnido'),
+    path('booking/siargao/', booking_siargao, name='booking_siargao'),
+    path('payment/', payment, name='payment'),
+
     path('', home, name='home'),
     
     path('register/', register, name='register'),
@@ -38,7 +45,7 @@ urlpatterns = [
     path('account/', account, name='account'),
 
     path('booking/', booking_create, name='booking_create'),
-    path('booking_list/', booking_list, name='booking_list'),
+    path('booking/list/', booking_list, name='booking_list'),
     path('update/<int:pk>/', booking_update, name='booking_update'),
     path('delete/<int:pk>/', booking_delete, name='booking_delete'),
 
@@ -67,13 +74,5 @@ urlpatterns = [
     path('api/routes/available/', get_available_routes, name='api_available_routes'),
     path('api/schedules/available/', get_available_schedules, name='api_available_schedules'),
     path('api/calculate-fare/', calculate_fare, name='api_calculate_fare'),
-
-    # Update Destination Booking Routes - move these before other patterns
-    path('booking/boracay/', booking_boracay, name='booking_boracay'),
-    path('booking/cebu/', booking_cebu, name='booking_cebu'),
-    path('booking/elnido/', booking_elnido, name='booking_elnido'),
-    path('booking/siargao/', booking_siargao, name='booking_siargao'),
-    
-    # Payment Route
-    path('payment/', payment, name='payment'),
+    path('api/ports/available/<int:departure_id>/', get_available_ports, name='api_available_ports'),
 ]

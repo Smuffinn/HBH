@@ -4,36 +4,148 @@
 {% block package_image %}https://assets.cntraveller.in/photos/60ba26c0bfe773a828a47146/4:3/w_1440,h_1080,c_limit/Palawan-GettyImages-1273584292.jpg{% endblock %}
 {% block package_name %}El Nido{% endblock %}
 {% block badge_text %}Flash Sale{% endblock %}
-{% block package_title %}Manila ↔ El Nido Express{% endblock %}
-{% block price %}Buy 1 Get 1 Free!{% endblock %}
+{% block package_title %}{{ route.departure_port }} ↔ {{ route.arrival_port }} Express{% endblock %}
+{% block price %}₱{{ route.base_price }} per person{% endblock %}
 
 {% block package_features %}
     <li>24 Hours Flash Sale</li>
     <li>Premium Ferry Service</li>
     <li>Complimentary Meals</li>
+    <li>Journey duration: {{ route.duration }}</li>
+    <li>Distance: {{ route.distance }} nautical miles</li>
 {% endblock %}
 
 {% block booking_form %}
+<form method="POST" action="{% url 'payment' %}" class="booking-form">
+    {% csrf_token %}
+    
     <input type="hidden" name="package_type" value="elnido_express">
-    <input type="hidden" name="base_price" value="1999">
+    <input type="hidden" name="base_price" value="{{ route.base_price }}">
     
+    <!-- Passenger Details -->
     <div class="form-group">
-        <label>Travel Date</label>
-        <input type="date" name="travel_date" required>
-    </div>
-    
-    <div class="form-group">
-        <label>Number of Pairs (Buy 1 Get 1)</label>
-        <input type="number" name="passenger_pairs" min="1" required>
+        <label>Name</label>
+        <input type="text" name="name" required value="{{ request.user.get_full_name }}">
     </div>
 
     <div class="form-group">
-        <label>Preferred Schedule</label>
-        <select name="departure_time" required>
-            <option value="morning">Morning (7:00 AM)</option>
-            <option value="evening">Evening (7:00 PM)</option>
+        <label>Email</label>
+        <input type="email" name="email" required value="{{ request.user.email }}">
+    </div>
+
+    <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" name="phone_number" required pattern="[0-9]{11}" title="Please enter a valid 11-digit phone number">
+    </div>
+
+    <div class="form-group">
+        <label>Gender</label>
+        <select name="gender" required>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+            <option value="O">Other</option>
         </select>
     </div>
 
+    <div class="form-group">
+        <label>Age</label>
+        <input type="number" name="age" required min="0" max="120">
+    </div>
+
+    <!-- Trip Details -->
+    <div class="form-group">
+        <label>Travel Date</label>
+        <input type="date" name="travel_date" required id="travel_date"
+               min="{{ min_date }}" max="{{ max_date }}">
+    </div>
+    
+    <div class="form-group">
+        <label>Available Schedules</label>
+        <select name="schedule_id" required id="schedule_select">
+            {% if initial_schedules %}
+                <option value="">Select a schedule</option>
+                {% for schedule in initial_schedules %}
+                    <option value="{{ schedule.id }}">
+                        {{ schedule.departure_time|date:"g:i A" }} - 
+                        {{ schedule.vessel.name }} 
+                        ({{ schedule.available_seats }} seats available)
+                    </option>
+                {% endfor %}
+            {% else %}
+                <option value="">Select travel date first</option>
+            {% endif %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Number of Passengers</label>
+        <input type="number" name="passengers" min="1" max="10" required value="1">
+    </div>
+
     <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('travel_date');
+    const scheduleSelect = document.getElementById('schedule_select');
+
+    dateInput.addEventListener('change', async function() {
+        const date = this.value;
+        if (!date) return;
+
+        // Show loading state
+        scheduleSelect.innerHTML = '<option value="">Loading schedules...</option>';
+        scheduleSelect.disabled = true;
+
+        try {
+            // Make API call with proper route ID
+            const routeId = '{{ route.id }}';
+            console.log('Fetching schedules for route:', routeId, 'date:', date);
+            
+            const response = await fetch(`/api/schedules/available/?route=${routeId}&date=${date}`);
+            const data = await response.json();
+            
+            console.log('API Response:', data);
+
+            scheduleSelect.innerHTML = '<option value="">Select a schedule</option>';
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            if (!Array.isArray(data) || data.length === 0) {
+                scheduleSelect.innerHTML = '<option value="" disabled>No schedules available for this date</option>';
+                return;
+            }
+            
+            data.forEach(schedule => {
+                const departureTime = new Date(schedule.departure_time);
+                const option = document.createElement('option');
+                option.value = schedule.id;
+                option.dataset.seats = schedule.available_seats;
+                option.textContent = `${departureTime.toLocaleTimeString()} - ${schedule.vessel__name} (${schedule.available_seats} seats)`;
+                scheduleSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            scheduleSelect.innerHTML = '<option value="">Error loading schedules: ' + error.message + '</option>';
+        } finally {
+            scheduleSelect.disabled = false;
+        }
+    });
+
+    // Add form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const selectedSchedule = scheduleSelect.value;
+        if (!selectedSchedule) {
+            e.preventDefault();
+            alert('Please select a schedule');
+        }
+    });
+});
+</script>
 {% endblock %}

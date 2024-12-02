@@ -52,17 +52,28 @@
 
     <!-- Schedule selection -->
     <div class="form-group">
-        <label>Tour Date</label>
-        <input type="date" name="travel_date" required 
-               min="{{ min_date|default:'' }}" max="{{ max_date|default:'' }}">
+        <label>Travel Date</label>
+        <input type="date" name="travel_date" required id="travel_date"
+               min="{{ min_date }}" max="{{ max_date }}">
     </div>
     
     <div class="form-group">
-        <label>Select Time</label>
-        <select name="departure_time" required>
-            <option value="morning">Morning (8:00 AM)</option>
-            <option value="afternoon">Afternoon (1:00 PM)</option>
+        <label>Available Schedules</label>
+        <select name="schedule_id" required id="schedule_select">
+            {% if initial_schedules %}
+                <option value="">Select a schedule</option>
+                {% for schedule in initial_schedules %}
+                    <option value="{{ schedule.id }}">
+                        {{ schedule.departure_time|date:"g:i A" }} - 
+                        {{ schedule.vessel.name }} 
+                        ({{ schedule.available_seats }} seats available)
+                    </option>
+                {% endfor %}
+            {% else %}
+                <option value="">Select travel date first</option>
+            {% endif %}
         </select>
+        <small class="text-muted">Please select your preferred departure time</small>
     </div>
 
     <div class="form-group">
@@ -85,11 +96,43 @@
 {% block extra_scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('.booking-form');
-    form.addEventListener('submit', function(e) {
-        // For demo purposes, set a dummy schedule_id
-        // In production, this should be set based on actual available schedules
-        document.getElementById('schedule_id').value = '1';
+    const dateInput = document.getElementById('travel_date');
+    const scheduleSelect = document.getElementById('schedule_select');
+
+    dateInput.addEventListener('change', async function() {
+        const date = this.value;
+        if (!date) return;
+
+        // Show loading state
+        scheduleSelect.innerHTML = '<option value="">Loading schedules...</option>';
+        scheduleSelect.disabled = true;
+
+        try {
+            // Make API call
+            const response = await fetch(`/api/schedules/available/?route={{ route.id }}&date=${date}`);
+            if (!response.ok) throw new Error('Failed to fetch schedules');
+            
+            const schedules = await response.json();
+            scheduleSelect.innerHTML = '<option value="">Select a schedule</option>';
+            
+            if (!Array.isArray(schedules) || schedules.length === 0) {
+                scheduleSelect.innerHTML += '<option value="" disabled>No schedules available for this date</option>';
+                return;
+            }
+            
+            schedules.forEach(schedule => {
+                const departureTime = new Date(schedule.departure_time);
+                const option = document.createElement('option');
+                option.value = schedule.id;
+                option.textContent = `${departureTime.toLocaleTimeString()} - ${schedule.vessel__name} (${schedule.available_seats} seats available)`;
+                scheduleSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            scheduleSelect.innerHTML = '<option value="">Error loading schedules</option>';
+        } finally {
+            scheduleSelect.disabled = false;
+        }
     });
 });
 </script>

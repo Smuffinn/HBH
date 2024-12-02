@@ -2,17 +2,54 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<div class="booking-wrapper">
+    <div class="booking-container">
+        <div class="booking-header">
+            <div class="header-content">
+                <h1 class="text-primary">My Bookings</h1>
+                <p class="text-muted">Manage your travel arrangements</p>
+            </div>
+            <a href="{% url 'booking_create' %}" class="btn btn-primary btn-lg create-booking-btn">
+                <i class="fas fa-plus-circle"></i> New Booking
+            </a>
+        </div>
 
-
-<h1>Booking List</h1>
-<a href="{% url 'booking_create' %}">Create New Booking</a>
-<ul>
-    {% for booking in bookings %}
-    <li>
-        {{ booking }} 
-        <a href="{% url 'booking_update' booking.pk %}">Edit</a>
-        <a href="{% url 'booking_delete' booking.pk %}">Delete</a>
-    </li>
-    {% endfor %}
-</ul>
+        <div class="booking-grid">
+            {% for booking in bookings %}
+            <div class="booking-item">
+                <div class="booking-status {{ booking.status|lower }}-status"></div>
+                <div class="booking-card">
+                    <div class="card-header">
+                        <h5 class="card-title">Booking #{{ booking.pk }}</h5>
+                        <span class="booking-date">{{ booking.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="booking-details">
+                            <p><i class="fas fa-route"></i> {{ booking.schedule.route }}</p>
+                            <p><i class="fas fa-users"></i> {{ booking.number_of_passengers }} passengers</p>
+                            <p><i class="fas fa-calendar-alt"></i> {{ booking.schedule.departure_time|date:"M d, Y H:i" }}</p>
+                        </div>
+                        <div class="booking-actions">
+                            <a href="{% url 'booking_update' booking.pk %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'booking_delete' booking.pk %}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-ticket-alt empty-icon"></i>
+                <h3>No Bookings Yet</h3>
+                <p>Start planning your journey today!</p>
+                <a href="{% url 'booking_create' %}" class="btn btn-primary btn-lg mt-3">Create Your First Booking</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

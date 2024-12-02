@@ -12,6 +12,7 @@ from decimal import Decimal
 from django.utils import timezone
 from django.db.models import Q
 import logging
+import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -139,16 +140,79 @@ def booking_create(request):
         form = BookingForm(request.POST)
         if form.is_valid():
             booking = form.save(commit=False)
+            booking.user = request.user
             booking.save()
-            return redirect('booking_list')
-    else:
-        form = BookingForm()
+            return redirect('payment')
     
     context = {
-        'form': form,
-        'popular_routes': Route.objects.filter(is_active=True)[:5]
+        'ports': Port.objects.filter(is_active=True),  # Add is_active filter back
+        'routes': Route.objects.filter(is_active=True).values('id', 'departure_port__name', 'arrival_port__name', 'base_price', 'duration'),
+        'min_date': timezone.now().date().isoformat(),
+        'max_date': (timezone.now() + timezone.timedelta(days=90)).date().isoformat()
     }
     return render(request, 'HarborHop/booking_create.html', context)
+
+def get_available_ports(request, departure_id):
+    departure_port = get_object_or_404(Port, id=departure_id)
+    available_ports = Port.objects.filter(
+        arrival_routes__departure_port=departure_port,
+        is_active=True
+    ).distinct()
+    return JsonResponse(list(available_ports.values('id', 'name')), safe=False)
+
+def get_available_schedules(request):
+    try:
+        route_id = request.GET.get('route')
+        departure_id = request.GET.get('departure')
+        arrival_id = request.GET.get('arrival')
+        date = request.GET.get('date')
+        
+        if not date:
+            return JsonResponse({'error': 'Date is required'}, status=400)
+            
+        # Parse the date string to datetime
+        date_obj = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+        start_datetime = timezone.make_aware(datetime.datetime.combine(date_obj, datetime.time.min))
+        end_datetime = timezone.make_aware(datetime.datetime.combine(date_obj, datetime.time.max))
+
+        # Find the route based on either route_id or departure/arrival ports
+        if route_id:
+            route = get_object_or_404(Route, id=route_id, is_active=True)
+        elif departure_id and arrival_id:
+            route = Route.objects.filter(
+                departure_port_id=departure_id,
+                arrival_port_id=arrival_id,
+                is_active=True
+            ).first()
+        else:
+            return JsonResponse({'error': 'Invalid route parameters'}, status=400)
+
+        if not route:
+            return JsonResponse({'error': 'No active route found'}, status=404)
+
+        # Query schedules
+        schedules = Schedule.objects.select_related('vessel', 'route').filter(
+            route=route,
+            departure_time__range=(start_datetime, end_datetime),
+            available_seats__gt=0,
+            status='SCHEDULED'
+        ).order_by('departure_time')
+        
+        schedule_list = [{
+            'id': schedule.id,
+            'departure_time': schedule.departure_time.isoformat(),
+            'arrival_time': schedule.arrival_time.isoformat(),
+            'available_seats': schedule.available_seats,
+            'vessel__name': schedule.vessel.name,
+            'base_price': str(schedule.route.base_price),
+            'route_name': f"{schedule.route.departure_port.name} → {schedule.route.arrival_port.name}"
+        } for schedule in schedules]
+        
+        return JsonResponse(schedule_list, safe=False)
+        
+    except Exception as e:
+        logger.error(f"Error in get_available_schedules: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required
 def booking_update(request, pk):
@@ -194,50 +258,6 @@ def get_available_routes(request):
         'base_price', 'duration'
     )
     return JsonResponse(list(routes), safe=False)
-
-def get_available_schedules(request):
-    try:
-        route_id = request.GET.get('route')
-        date = request.GET.get('date')
-        
-        if not route_id or not date:
-            return JsonResponse({'error': 'Missing route_id or date'}, status=400)
-        
-        # Convert date string to datetime objects for range query
-        from datetime import datetime
-        from django.utils import timezone
-        import pytz
-
-        # Parse the date and create datetime range
-        date_obj = datetime.strptime(date, '%Y-%m-%d').date()
-        start_datetime = timezone.make_aware(datetime.combine(date_obj, datetime.min.time()))
-        end_datetime = timezone.make_aware(datetime.combine(date_obj, datetime.max.time()))
-        
-        # Query schedules
-        schedules = Schedule.objects.filter(
-            route_id=route_id,
-            departure_time__range=(start_datetime, end_datetime),
-            available_seats__gt=0,
-            status='SCHEDULED'
-        ).values(
-            'id',
-            'departure_time',
-            'arrival_time',
-            'available_seats',
-            'vessel__name'
-        )
-        
-        # Convert to list and format datetime
-        schedule_list = list(schedules)
-        for schedule in schedule_list:
-            schedule['departure_time'] = schedule['departure_time'].strftime('%Y-%m-%d %H:%M:%S')
-            schedule['arrival_time'] = schedule['arrival_time'].strftime('%Y-%m-%d %H:%M:%S')
-        
-        return JsonResponse(schedule_list, safe=False)
-        
-    except Exception as e:
-        print(f"Error in get_available_schedules: {str(e)}")  # Debug print
-        return JsonResponse({'error': str(e)}, status=500)
 
 def calculate_fare(request):
     schedule_id = request.GET.get('schedule')
@@ -357,131 +377,155 @@ def schedule_delete(request, pk):
     return render(request, 'HarborHop/schedule_delete.html', {'schedule': schedule})
 
 # Destination Booking Views
+@login_required
 def booking_boracay(request):
     try:
-        # Get all active routes
-        active_routes = Route.objects.filter(is_active=True)
-        print("Active routes:", active_routes)  # Debug print
-        
-        # Get routes with Boracay/Caticlan
-        boracay_routes = Route.objects.filter(
-            Q(arrival_port__name__icontains='Boracay') |
-            Q(arrival_port__name__icontains='Caticlan'),
+        boracay_route = Route.objects.filter(
+            Q(arrival_port__name__icontains='Boracay') | Q(departure_port__name__icontains='Boracay'),
             is_active=True
-        )
-        print("Boracay routes:", boracay_routes)  # Debug print
-        
-        boracay_route = boracay_routes.first()
-        if not boracay_route:
-            messages.error(request, 'Boracay route is currently unavailable. Please create route data first.')
-            return render(request, 'HarborHop/booking_error.html', {
-                'error': 'No active route to Boracay found',
-                'debug_info': {
-                    'active_routes': list(active_routes),
-                    'boracay_routes': list(boracay_routes),
-                }
-            })
-        
-        # Rest of your existing code...
+        ).first()
+
         if not boracay_route:
             messages.error(request, 'Boracay route is currently unavailable')
             return redirect('home')
-        
-        # Get future schedules for today and upcoming dates
-        today = timezone.now()
-        initial_schedules = Schedule.objects.filter(
-            route=boracay_route,
-            departure_time__gte=today,
-            status='SCHEDULED',
-            available_seats__gt=0
-        ).order_by('departure_time')[:5]
-        
-        context = {
-            'route': boracay_route,
-            'initial_schedules': initial_schedules,
-            'min_date': today.date().isoformat(),
-            'max_date': (today + timezone.timedelta(days=90)).date().isoformat()
-        }
+
+        context = prepare_booking_context(boracay_route)
         return render(request, 'HarborHop/booking_boracay.html', context)
-        
     except Exception as e:
-        print(f"Error in booking_boracay: {str(e)}")  # Debug print
-        messages.error(request, 'An error occurred while loading the booking page')
+        messages.error(request, f'Error loading booking page: {str(e)}')
         return redirect('home')
 
+@login_required
+def booking_siargao(request):
+    try:
+        siargao_route = Route.objects.filter(
+            Q(arrival_port__name__icontains='Siargao') | Q(departure_port__name__icontains='Siargao'),
+            is_active=True
+        ).first()
+
+        if not siargao_route:
+            messages.error(request, 'Siargao route is currently unavailable')
+            return redirect('home')
+
+        context = prepare_booking_context(siargao_route)
+        return render(request, 'HarborHop/booking_siargao.html', context)
+    except Exception as e:
+        messages.error(request, f'Error loading booking page: {str(e)}')
+        return redirect('home')
+
+@login_required
+def booking_elnido(request):
+    try:
+        elnido_route = Route.objects.filter(
+            Q(arrival_port__name__icontains='El Nido') | Q(departure_port__name__icontains='El Nido'),
+            is_active=True
+        ).first()
+
+        if not elnido_route:
+            messages.error(request, 'El Nido route is currently unavailable')
+            return redirect('home')
+
+        context = prepare_booking_context(elnido_route)
+        return render(request, 'HarborHop/booking_elnido.html', context)
+    except Exception as e:
+        messages.error(request, f'Error loading booking page: {str(e)}')
+        return redirect('home')
+
+@login_required
 def booking_cebu(request):
     try:
-        today = timezone.now()
-        context = {
-            'min_date': today.date().isoformat(),
-            'max_date': (today + timezone.timedelta(days=90)).date().isoformat()
-        }
+        cebu_route = Route.objects.filter(
+            Q(arrival_port__name__icontains='Cebu') | Q(departure_port__name__icontains='Cebu'),
+            is_active=True
+        ).first()
+
+        if not cebu_route:
+            messages.error(request, 'Cebu route is currently unavailable')
+            return redirect('home')
+
+        context = prepare_booking_context(cebu_route)
         return render(request, 'HarborHop/booking_cebu.html', context)
     except Exception as e:
-        print(f"Error in booking_cebu: {str(e)}")  # Debug print
-        messages.error(request, 'An error occurred while loading the booking page')
+        messages.error(request, f'Error loading booking page: {str(e)}')
         return redirect('home')
 
-def booking_elnido(request):
-    return render(request, 'HarborHop/booking_elnido.html')
+def prepare_booking_context(route):
+    """Helper function to prepare context for booking templates"""
+    today = timezone.now()
+    initial_schedules = Schedule.objects.filter(
+        route=route,
+        departure_time__gte=today,
+        status='SCHEDULED',
+        available_seats__gt=0
+    ).select_related('vessel').order_by('departure_time')[:5]
 
-def booking_siargao(request):
-    return render(request, 'HarborHop/booking_siargao.html')
+    return {
+        'route': route,
+        'initial_schedules': initial_schedules,
+        'min_date': today.date().isoformat(),
+        'max_date': (today + timezone.timedelta(days=90)).date().isoformat()
+    }
 
 @login_required
 def payment(request):
     if request.method == 'POST':
         try:
-            # Get schedule instance
-            schedule_id = request.POST.get('schedule_id')
-            if not schedule_id:
-                messages.error(request, 'No schedule selected')
-                return redirect('booking_boracay')
-
-            schedule = get_object_or_404(Schedule, id=schedule_id)
-            passengers = int(request.POST.get('passengers', 1))
+            # Validate required fields
+            required_fields = ['schedule_id', 'name', 'email', 'phone_number', 
+                             'gender', 'age', 'passengers', 'base_price']
             
-            if schedule.available_seats < passengers:
-                messages.error(request, 'Not enough seats available')
-                return redirect('booking_boracay')
+            for field in required_fields:
+                if not request.POST.get(field):
+                    messages.error(request, f'Missing required field: {field}')
+                    return redirect('booking_create')
 
-            # Prepare booking data for session
+            schedule = get_object_or_404(Schedule, id=request.POST['schedule_id'])
+            passengers = int(request.POST['passengers'])
+            base_price = Decimal(request.POST['base_price'])
+            
+            # Calculate totals
+            base_fare = base_price * passengers
+            taxes = base_fare * Decimal('0.12')
+            total_amount = base_fare + taxes
+            
+            # Create booking data dictionary with all required fields
             booking_data = {
-                'schedule_id': schedule_id,
-                'name': request.POST.get('name'),
-                'email': request.POST.get('email'),
-                'phone_number': request.POST.get('phone_number'),
-                'gender': request.POST.get('gender'),
-                'age': request.POST.get('age'),
-                'package_type': request.POST.get('package_type'),
-                'base_price': request.POST.get('base_price'),
+                'schedule_id': schedule.id,
+                'name': request.POST['name'],
+                'email': request.POST['email'],
+                'phone_number': request.POST['phone_number'],
+                'gender': request.POST['gender'],
+                'age': int(request.POST['age']),
+                'package_type': request.POST.get('package_type', 'regular'),
                 'number_of_passengers': passengers,
+                'base_price': str(base_price),  # Convert to string
                 'travel_date': request.POST.get('travel_date'),
-                'departure_time': request.POST.get('departure_time')
+                'departure_time': schedule.departure_time.strftime('%Y-%m-%d %H:%M:%S'),
+                'departure_port': schedule.route.departure_port.name,
+                'arrival_port': schedule.route.arrival_port.name,
+                'vessel_name': schedule.vessel.name,
+                'base_fare': str(base_fare),  # Convert to string
+                'taxes': str(taxes),  # Convert to string
+                'total_amount': str(total_amount)  # Convert to string
             }
 
             # Store in session
             request.session['booking_data'] = booking_data
             
-            # Calculate totals
-            base_price = Decimal(booking_data['base_price'])
-            base_fare = base_price * passengers
-            taxes = base_fare * Decimal('0.12')  # 12% tax
-            total = base_fare + taxes
-            
+            # Convert Decimal objects to strings for template context
             context = {
                 **booking_data,
-                'base_fare': base_fare,
-                'taxes': taxes,
-                'total_amount': total,
+                'base_fare_display': f"₱{base_fare:,.2f}",
+                'taxes_display': f"₱{taxes:,.2f}",
+                'total_amount_display': f"₱{total_amount:,.2f}",
                 'schedule': schedule
             }
             
             return render(request, 'HarborHop/payment.html', context)
             
         except Exception as e:
-            print(f"Error in payment view: {str(e)}")  # Debug print
+            print(f"Error in payment view: {str(e)}")
             messages.error(request, f'Error processing payment: {str(e)}')
-            return redirect('booking_boracay')
+            return redirect('booking_create')
     
-    return redirect('home')
+    return redirect('booking_create')

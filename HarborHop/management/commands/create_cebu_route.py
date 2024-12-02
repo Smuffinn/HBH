@@ -1,10 +1,11 @@
+
 from django.core.management.base import BaseCommand
 from HarborHop.models import Port, Route, Vessel, Schedule
 from datetime import timedelta
 from django.utils import timezone
 
 class Command(BaseCommand):
-    help = 'Creates a complete Boracay route with test data'
+    help = 'Creates a complete Cebu route with test data'
 
     def handle(self, *args, **kwargs):
         # Create ports
@@ -13,17 +14,17 @@ class Command(BaseCommand):
             defaults={'capacity': 1000}
         )
         
-        boracay_port, _ = Port.objects.get_or_create(
-            name='Boracay Port',  # Changed from Caticlan Port to match the query
-            defaults={'capacity': 500}
+        cebu_port, _ = Port.objects.get_or_create(
+            name='Cebu Port',
+            defaults={'capacity': 800}
         )
         
         # Create vessel
         vessel, _ = Vessel.objects.get_or_create(
-            name='FastCat Boracay Express',
+            name='Ocean Jet 2',
             defaults={
                 'current_port': 'Manila Port',
-                'destination_port': 'Boracay Port',
+                'destination_port': 'Cebu Port',
                 'seating_capacity': 150
             }
         )
@@ -31,21 +32,19 @@ class Command(BaseCommand):
         # Create route
         route, _ = Route.objects.get_or_create(
             departure_port=manila_port,
-            arrival_port=boracay_port,
+            arrival_port=cebu_port,
             defaults={
-                'base_price': 999.00,
-                'distance': 315.00,
-                'duration': timedelta(hours=4),
+                'base_price': 2499.00,
+                'distance': 365.00,  # Approximate nautical miles
+                'duration': timedelta(hours=5),
                 'is_active': True
             }
         )
 
         # Create schedules for the next 7 days
-        today = timezone.now()
         for i in range(7):
-            # Morning schedule - 8 AM
-            morning_departure = today + timedelta(days=i)
-            morning_departure = morning_departure.replace(hour=8, minute=0, second=0, microsecond=0)
+            # Morning schedule
+            morning_departure = timezone.now() + timedelta(days=i, hours=8)  # 8 AM
             morning_arrival = morning_departure + route.duration
             
             Schedule.objects.get_or_create(
@@ -59,9 +58,8 @@ class Command(BaseCommand):
                 }
             )
             
-            # Afternoon schedule - 2 PM
-            afternoon_departure = today + timedelta(days=i)
-            afternoon_departure = afternoon_departure.replace(hour=14, minute=0, second=0, microsecond=0)
+            # Afternoon schedule
+            afternoon_departure = timezone.now() + timedelta(days=i, hours=13)  # 1 PM
             afternoon_arrival = afternoon_departure + route.duration
             
             Schedule.objects.get_or_create(
@@ -75,4 +73,4 @@ class Command(BaseCommand):
                 }
             )
         
-        self.stdout.write(self.style.SUCCESS('Successfully created Boracay route with schedules'))
+        self.stdout.write(self.style.SUCCESS('Successfully created Cebu route with schedules'))

@@ -1,91 +1,605 @@
-{% extends 'HarborHop/header.html' %}
-{% load static %}
+{% extends 'HarborHop/base.html' %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/booking.css' %}">
 <div class="booking-container">
-    <h1>{% block booking_title %}{% endblock %}</h1>
-    
-    <div class="package-info">
-        <img src="{% block package_image %}{% endblock %}" alt="{% block package_name %}{% endblock %}">
-        <div class="badge">{% block badge_text %}{% endblock %}</div>
-        <h2>{% block package_title %}{% endblock %}</h2>
-        <p class="price">{% block price %}{% endblock %}</p>
+    <!-- Progress Indicator -->
+    <div class="progress-steps">
+        <div class="step active">
+            <div class="step-icon">1</div>
+            <div class="step-text">Select Package</div>
+        </div>
         
-        <div class="features">
-            <h3>Package Features:</h3>
-            <ul>
-                {% block package_features %}{% endblock %}
-            </ul>
+        <div class="step-line"></div>
+        <div class="step">
+            <div class="step-icon">2</div>
+            <div class="step-text">Payment</div>
         </div>
     </div>
 
-    <div class="booking-form-container">
-        {% block booking_form %}{% endblock %}
+    <div class="booking-content">
+        <!-- Package Card -->
+        <div class="package-card">
+            <div class="package-image">
+                <img src="{% block package_image %}{% endblock %}" alt="{% block package_name %}{% endblock %}">
+                <div class="package-badge">{% block badge_text %}{% endblock %}</div>
+            </div>
+            
+            <div class="package-details">
+                <h1 class="package-title">{% block booking_title %}{% endblock %}</h1>
+                <h2 class="route-title">{% block package_title %}{% endblock %}</h2>
+                <div class="package-price">{% block price %}{% endblock %}</div>
+                
+                <div class="features-list">
+                    <h3>Package Features:</h3>
+                    <ul>
+                        {% block package_features %}{% endblock %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Form -->
+        <div class="booking-form">
+            {% block booking_form %}{% endblock %}
+        </div>
     </div>
 </div>
 
-{% block extra_scripts %}{% endblock %}
+<!-- Error Alert -->
+<div id="errorAlert" class="error-alert" style="display: none;">
+    <div class="alert-content">
+        <span class="close-btn">&times;</span>
+        <p id="errorMessage"></p>
+    </div>
+</div>
 
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading schedules...</p>
+</div>
+{% endblock %}
+
+{% block extra_css %}
 <style>
+    /* Modern Booking Design */
     .booking-container {
         max-width: 1200px;
-        margin: 40px auto;
+        margin: 2rem auto;
         padding: 20px;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
 
-    .package-info {
+    /* Enhanced Progress Steps */
+    .progress-steps {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 3rem;
+        padding: 20px;
         background: white;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
 
-    .package-info img {
-        width: 100%;
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+        padding: 0 20px;
+    }
+
+    .step-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: #f0f2f5;
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .step.active .step-icon {
+        background: #0984e3;
+        color: white;
+        box-shadow: 0 0 0 3px rgba(9, 132, 227, 0.2);
+    }
+
+    .step.completed .step-icon {
+        background: #28a745;
+        color: white;
+    }
+
+    .step-text {
+        font-size: 0.95rem;
+        color: #666;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    .step-line {
+        flex-grow: 1;
+        height: 3px;
+        background: #e0e0e0;
+        margin: 0 15px;
+        position: relative;
+        top: -32px;
+    }
+
+    .step-line.completed {
+        background: #28a745;
+    }
+
+    /* Booking Content Layout */
+    .booking-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    /* Package Card */
+    .package-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease;
+    }
+
+    .package-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .package-image {
+        position: relative;
         height: 300px;
+        overflow: hidden;
+    }
+
+    .package-image img {
+        width: 100%;
+        height: 100%;
         object-fit: cover;
-        border-radius: 8px;
+        transition: transform 0.3s ease;
     }
 
-    .booking-form-container {
-        background: white;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    .package-image:hover img {
+        transform: scale(1.05);
     }
 
+    .package-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #ff9900;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-weight: 600;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .package-details {
+        padding: 2rem;
+    }
+
+    .package-title {
+        font-size: 1.8rem;
+        color: #003366;
+        margin-bottom: 0.5rem;
+    }
+
+    .route-title {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 1rem;
+    }
+
+    .package-price {
+        font-size: 1.5rem;
+        color: #ff9900;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+    }
+
+    .features-list {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .features-list h3 {
+        color: #003366;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .features-list ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .features-list li {
+        padding: 8px 0;
+        position: relative;
+        padding-left: 25px;
+        color: #555;
+    }
+
+    .features-list li:before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    /* Enhanced Form Styling */
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 1.5rem;
+        position: relative;
     }
 
     .form-group label {
         display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #2d3436;
+        font-weight: 500;
+        font-size: 0.95rem;
     }
 
     .form-group input,
     .form-group select {
         width: 100%;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8fafc;
     }
 
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #0984e3;
+        box-shadow: 0 0 0 3px rgba(9, 132, 227, 0.1);
+        outline: none;
+    }
+
+    .form-group small {
+        display: block;
+        margin-top: 0.5rem;
+        color: #64748b;
+        font-size: 0.85rem;
+    }
+
+    /* Enhanced Button Styling */
     .checkout-btn {
-        background: #ff9900;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
         width: 100%;
+        padding: 15px 25px;
+        background: linear-gradient(135deg, #0984e3, #0652DD);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.2em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
     }
 
     .checkout-btn:hover {
-        background: #e68a00;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(9, 132, 227, 0.2);
+    }
+
+    /* Enhanced Form Container */
+    .booking-form {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.5);
+        transition: transform 0.3s ease;
+        overflow: hidden; /* Add this to contain child elements */
+    }
+
+    .form-group {
+        background: #f8fafc;
+        padding: 1.25rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        border: 1px solid #e5e9f0;
+        transition: all 0.3s ease;
+        overflow: hidden; /* Add this to contain child elements */
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.75rem;
+        color: #2d3436;
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+        white-space: nowrap; /* Prevent label from wrapping */
+        overflow: hidden; /* Hide overflow text */
+        text-overflow: ellipsis; /* Show ... for overflow text */
+    }
+
+    .form-group input,
+    .form-group select {
+        width: calc(100% - 2px); /* Subtract border width */
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        box-sizing: border-box; /* Add this to include padding in width calculation */
+        max-width: 100%; /* Ensure input doesn't overflow */
+    }
+
+    /* Fix form row spacing */
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Add responsive adjustments */
+    @media (max-width: 576px) {
+        .booking-form {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            padding: 1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px 12px;
+            font-size: 0.95rem;
+        }
+    }
+
+    /* Enhanced Form Container */
+    .booking-form {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.5);
+        transition: transform 0.3s ease;
+    }
+
+    .form-group {
+        background: #f8fafc;
+        padding: 1.25rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        border: 1px solid #e5e9f0;
+        transition: all 0.3s ease;
+    }
+
+    .form-group:hover {
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-color: #0984e3;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.75rem;
+        color: #2d3436;
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #0984e3;
+        box-shadow: 0 0 0 3px rgba(9, 132, 227, 0.1);
+        outline: none;
+    }
+
+    .form-group input::placeholder {
+        color: #a0a0a0;
+    }
+
+    .form-group select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        padding-right: 40px;
+    }
+
+    .checkout-btn {
+        margin-top: 2rem;
+        background: linear-gradient(135deg, #0984e3, #0652DD);
+        padding: 1rem 2rem;
+        box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .booking-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .package-card {
+            margin-bottom: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .progress-steps {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .step-line {
+            display: none;
+        }
+        
+        .package-image {
+            height: 200px;
+        }
+    }
+
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.9);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .error-alert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ff4757;
+        color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        z-index: 1001;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .alert-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .close-btn {
+        cursor: pointer;
+        font-size: 1.2rem;
+    }
+
+    /* Add z-index to ensure content is above footer */
+    .main-content {
+        position: relative;
+        z-index: 2;
+        min-height: calc(100vh - 200px); /* Adjust based on footer height */
+        margin-bottom: 40px; /* Add margin to separate from footer */
+    }
+
+    footer {
+        position: relative;
+        z-index: 1;
+        margin-top: auto;
     }
 </style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Common form validation
+    const form = document.querySelector('form');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    
+    // Show validation messages inline
+    function showError(input, message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.style.color = '#ff4757';
+        errorDiv.style.fontSize = '0.875rem';
+        errorDiv.style.marginTop = '0.25rem';
+        errorDiv.textContent = message;
+        input.parentNode.appendChild(errorDiv);
+    }
+
+    // Enhanced schedule loading
+    async function loadSchedules(date, routeId) {
+        loadingOverlay.style.display = 'flex';
+        
+        try {
+            const response = await fetch(`/api/schedules/available/?route=${routeId}&date=${date}`);
+            const data = await response.json();
+            
+            if (!response.ok) throw new Error(data.error || 'Failed to load schedules');
+            
+            return data;
+        } catch (error) {
+            showError(error.message);
+            throw error;
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    }
+
+    // ...existing event listeners and validation code...
+});
+
+// Error handling utility
+function showError(message) {
+    const errorAlert = document.getElementById('errorAlert');
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.textContent = message;
+    errorAlert.style.display = 'block';
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        errorAlert.style.display = 'none';
+    }, 5000);
+}
+
+// Close button functionality
+document.querySelector('.close-btn').addEventListener('click', function() {
+    document.getElementById('errorAlert').style.display = 'none';
+});
+
+{% block schedule_scripts %}{% endblock %}
+</script>
 {% endblock %}

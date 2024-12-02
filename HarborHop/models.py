@@ -5,6 +5,7 @@ from decimal import Decimal
 class Port(models.Model):
     name = models.CharField(max_length=100, unique=True)
     capacity = models.PositiveIntegerField()
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
