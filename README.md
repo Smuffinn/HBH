@@ -61,6 +61,9 @@ To use the Harbor Management System, open your web browser and navigate to `http
 ### About Page
 ![About Page](PICTURES/About.png)
 
+### Payment Page
+![Payment Page](PICTURES/Payment.png)
+
 ## Contributing
 We welcome contributions to the Harbor Management System. To contribute, please follow these steps:
 
