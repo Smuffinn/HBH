@@ -56,7 +56,7 @@ To use the Harbor Management System, open your web browser and navigate to `http
 ![Home Page](PICTURES/Home.png)
 
 ### Booking Page
-![Booking Page](images/booking_page.jpg)
+![Booking Page](PICTURES/booking.jpg)
 
 ### About Page
 ![About Page](PICTURES/About.png)
