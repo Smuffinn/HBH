@@ -29,21 +29,9 @@ To get started with the Harbor Management System, follow these steps:
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/harbor-management-system.git
+    git clone https://github.com/Smuffinn/harbor-management-system.git
     ```
-2. Navigate to the project directory:
-    ```sh
-    cd harbor-management-system
-    ```
-3. Install the dependencies:
-    ```sh
-    pip install -r requirements.txt
-    ```
-4. Apply migrations:
-    ```sh
-    python manage.py migrate
-    ```
-5. Run the development server:
+2. Run the development server:
     ```sh
     python manage.py runserver
     ```
